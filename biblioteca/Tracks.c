@@ -1,7 +1,10 @@
 #include "Tracks.h"
+typedef enum atributos{
+	 	ID, NOME_DA_MUSICA, POPULARITY, DURACAO_MS, EXPLICT, ARTISTS, ID_ARTISTS, DATA_LANCAMENTO,
+		DANCEABILITY, ENERGY, KEY, LOUNDNESS, MODE, SPECHINESS, ACOUSTINES, INSTRUMENTALNES,
+		LIVENESS, VALENCE, TEMPO, TIME_ASSIGNATURE
+};
 
-int n_alocados = 100; // numero inicial de tracks alocadas
-const int n_data = 11; // total de caracteres + \0 
 
 struct track{
 	int id;
@@ -29,40 +32,94 @@ struct track{
 // Abre o arquivo de tracks ou finaliza o programa em caso de erro
 FILE* TrackAbreArquivo(){
 	FILE* f_tracks = fopen("data/tracks_5.csv", "r");
+	
 	if(f_tracks == NULL){
 		printf("Erro ao abrir o arquivo de tracks\n");
 		exit(EXIT_FAILURE);
 	}
+	
 	return f_tracks;
 }
 
-void TrackLe(Track track , FILE* file){
-	//setlocale(LC_ALL,"Portuguese_Brazil");
-    int maxl = 1000;
-    char *line = malloc(maxl * sizeof(char));
-    if(!line){
-        printf("Memory not allocated!!\n");
-        exit(EXIT_FAILURE);
-    } 
+void TrackLeEArmazena(Track track, FILE* file){
+
+	size_t n_alocados = ALOC_INICIAL;
+	char* linha = malloc(n_alocados * sizeof(char)); 
+	size_t  tam ;
 	
-	while (fgets(line, maxl, file)) {
+	//while(!feof(file)){
+		tam = getline(&linha, &n_alocados, file); // le linha por linha
+		printf("%s", linha);
+		Track t= TrackCria(linha, tam);
+		// cria track
+		// adiciona track
+	//}
+	
+	free(linha);
+	free(track);
+	fclose(file);
+	
+}
+// A funcao divide a linha em partes que sao adicionadas ao struct de acordo com que eh quebrada com a funcao strtok
+Track TrackCria(char* linha, size_t tamanho){ 
+	Track track = (Track)calloc(1, sizeof(struct track)); // cria a track
+	char * atributos;
+    char* token;
+ 
+  printf("%ld", tamanho);
+	for(int seletor = 0; seletor < 20; seletor++){
+		token = strtok_r(linha, ";", &linha);
+		printf("i: %d token: %s\n",seletor, token);
+		switch (seletor){
+			case(ID):
 
-        while(line[strlen(line) - 1] != '\n' && line[strlen(line) - 1] != '\r'){
-            char *tmp = realloc (line, 2 * maxl * sizeof(char));
+			break;
+			case(NOME_DA_MUSICA):
+			break;
+			case(POPULARITY):
+			break;
+			case(DURACAO_MS):
+			break;
+			case(EXPLICT):
+			break;
+			case(ARTISTS):
+			break;
+			case(ID_ARTISTS):
+			break;
+			case(DATA_LANCAMENTO):
+			break;
+			case(DANCEABILITY):
+			break;
+			case(ENERGY):
+			break;
+			case(KEY):
+			break;
+			case(LOUNDNESS):
+			break;
+			case(MODE):
+			break;
+			case(SPECHINESS):
+			break;
+			case(ACOUSTINES):
+			break;
+			case(INSTRUMENTALNES):
+			break;
+			case(LIVENESS):
+			break;
+			case(VALENCE):
+			break;
+			case(TEMPO):
+			break;
+			case(TIME_ASSIGNATURE):
+			break;
+		}
+		
+	}
+		
 
-            fseek(file,0,SEEK_SET);          //or wherever you want to seek to
-            if (tmp) {
-                line = tmp;
-                maxl *= 2;
-                fgets(line, maxl, file);
-            }
-            else{
-                printf("Not enough memory for this line!!\n");
-                exit(EXIT_FAILURE);
-            }
-        }
-        printf("%s",line);     //just to check
-    }
- }
+	
+	
+}
+
 
 

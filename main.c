@@ -4,6 +4,6 @@
 int main(void) {
 	FILE* f = TrackAbreArquivo();
 	Track track = NULL;
-	TrackLe(track, f);
+	TrackLeEArmazena(track,f);
   return 0;
 }

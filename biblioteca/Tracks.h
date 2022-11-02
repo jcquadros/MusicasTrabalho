@@ -3,14 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <locale.h>
-
+#define ALOC_INICIAL 1000
 typedef struct track *Track;
-
+typedef enum atributos Atributos;
+void TrackLeEArmazena(Track track, FILE* file);
 FILE* TrackAbreArquivo();
-Track TrackCria(Track); // aloca a track
-void TrackLe(Track, FILE*); // le do arquivo
-void TrackAdiciona(Track); // adicionar uma musica a um vetor de musicas, logo **
-void TrackImprime(Track); //imprime uma track
-
+Track TrackCria(char* linha, size_t tamanho);
 #endif 
