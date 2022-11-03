@@ -1,12 +1,13 @@
-#include "Tracks.h"
-typedef enum atributos{
+#include "Musica.h"
+
+enum{
 	 	ID, NOME_DA_MUSICA, POPULARITY, DURACAO_MS, EXPLICT, ARTISTS, ID_ARTISTS, DATA_LANCAMENTO,
 		DANCEABILITY, ENERGY, KEY, LOUNDNESS, MODE, SPECHINESS, ACOUSTINES, INSTRUMENTALNES,
 		LIVENESS, VALENCE, TEMPO, TIME_ASSIGNATURE
-};
+}Musca_atributos;
 
-
-struct track{
+// informacoes do tipo musica
+struct musica{
 	int id;
 	char* nome_da_musica;
 	int popularity;
@@ -29,56 +30,60 @@ struct track{
 	int time_assignature;
 };
 
-// Abre o arquivo de tracks ou finaliza o programa em caso de erro
-FILE* TrackAbreArquivo(){
-	FILE* f_tracks = fopen("data/tracks_5.csv", "r");
-	
-	if(f_tracks == NULL){
-		printf("Erro ao abrir o arquivo de tracks\n");
+FILE* musica_abre_arquivo(int argc, char** argv){
+    char dir[100];
+	// verifica se o diretorio foi informado como argumento
+    if(argc>1){
+		sprintf(dir, "%s", argv[1]);	
+	}else{
+		printf("Diretorio nao informado!\n");
 		exit(EXIT_FAILURE);
 	}
-	
-	return f_tracks;
-}
+    // verifica se o arquivo aberto eh valido
+	FILE* file = fopen(dir, "r");
 
-void TrackLeEArmazena(Track track, FILE* file){
+    if(file == NULL){
+        printf("O diretorio de musica'%s' nao existe!\n", argv[1]);
+        exit(EXIT_FAILURE);
+    }
 
-	size_t n_alocados = ALOC_INICIAL;
-	char* linha = malloc(n_alocados * sizeof(char)); 
-	size_t  tam ;
-	
-	//while(!feof(file)){
-		tam = getline(&linha, &n_alocados, file); // le linha por linha
-		printf("%s", linha);
-		Track t= TrackCria(linha, tam);
-		// cria track
-		// adiciona track
-	//}
-	
-	free(linha);
-	free(track);
-	fclose(file);
-	
+    return file;
 }
-// A funcao divide a linha em partes que sao adicionadas ao struct de acordo com que eh quebrada com a funcao strtok
-Track TrackCria(char* linha, size_t tamanho){ 
-	Track track = (Track)calloc(1, sizeof(struct track)); // cria a track
+// ler arquivo de musica
+size_t musica_ler(FILE* file, Musica musica){
+    char* linha = NULL;
+	size_t len = 0, retorno_get;
+    // leitura de uma linha por vez ate o final do arquivo
+	retorno_get = getline(&linha, &len, file);
+	if(retorno_get == EOF){
+        return(retorno_get);
+    }
+    printf("linha: %s", linha);
+    musica_tok(musica, linha, len);
+	return retorno_get;
+}
+// separar as musicas
+void musica_tok(Musica musica, char* musica_str, size_t len){
 	char * atributos;
     char* token;
- 
-  printf("%ld", tamanho);
 	for(int seletor = 0; seletor < 20; seletor++){
-		token = strtok_r(linha, ";", &linha);
+		token = strtok_r(musica_str, ";", &musica_str);
+        if(token == NULL){
+            break;
+        }
 		printf("i: %d token: %s\n",seletor, token);
 		switch (seletor){
 			case(ID):
-
+                // musica_salva_string(musica->id, token);
 			break;
 			case(NOME_DA_MUSICA):
+                //musica_salva_string(musica->nome_da_musica, token);
 			break;
 			case(POPULARITY):
+                //musica_salva_inteiro(musica->popularity, token);
 			break;
 			case(DURACAO_MS):
+                //
 			break;
 			case(EXPLICT):
 			break;
@@ -115,11 +120,10 @@ Track TrackCria(char* linha, size_t tamanho){
 		}
 		
 	}
-		
-
-	
-	
 }
-
-
-
+// alocar musica e retornar seu ponteiro
+//struct vector musica_add(Musica* musica,);
+// salvar musica no vetor de musica
+// imprimir uma musica
+void rect_mostrar(Musica musica);
+void musica_destroy(Musica musica);
