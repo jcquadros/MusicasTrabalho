@@ -1,129 +1,240 @@
 #include "Musica.h"
 
-enum{
-	 	ID, NOME_DA_MUSICA, POPULARITY, DURACAO_MS, EXPLICT, ARTISTS, ID_ARTISTS, DATA_LANCAMENTO,
-		DANCEABILITY, ENERGY, KEY, LOUNDNESS, MODE, SPECHINESS, ACOUSTINES, INSTRUMENTALNES,
-		LIVENESS, VALENCE, TEMPO, TIME_ASSIGNATURE
-}Musca_atributos;
+enum
+{
+	ID,
+	NOME_DA_MUSICA,
+	POPULARITY,
+	DURACAO_MS,
+	EXPLICT,
+	ARTISTS,
+	ID_ARTISTS,
+	DATA_LANCAMENTO,
+	DANCEABILITY,
+	ENERGY,
+	KEY,
+	LOUNDNESS,
+	MODE,
+	SPECHINESS,
+	ACOUSTINES,
+	INSTRUMENTALNES,
+	LIVENESS,
+	VALENCE,
+	TEMPO,
+	TIME_ASSIGNATURE
+} Musca_atributos;
 
 // informacoes do tipo musica
-struct musica{
-	int id;
-	char* nome_da_musica;
-	int popularity;
-	int duracao_ms;
-	int explict;
-	char** artists;
-	char** id_artists;
-	char* data_lancamento;
-	float danceability;
-	float energy; //
-	int key;
-	float loundness; 
-	int mode; //
-	float speechiness; //
-	float acousticness; //
-	float instrumentalness; //
-	float liveness; //
-	float valence; //
-	float tempo;
-	int time_assignature;
-};
+// struct musica
+// {
+// 	char *id;
+// 	char *nome_da_musica;
+// 	int popularity;
+// 	int duracao_ms;
+// 	int explict;
+// 	// Artista* artistas_lista;
+// 	char *artists;
+// 	char *id_artists;
+// 	char *data_lancamento;
+// 	float danceability;
+// 	float energy; //
+// 	int key;
+// 	float loundness;
+// 	int mode;				//
+// 	float speechiness;		//
+// 	float acousticness;		//
+// 	float instrumentalness; //
+// 	float liveness;			//
+// 	float valence;			//
+// 	float tempo;
+// 	int time_assignature;
+// };
 
-FILE* musica_abre_arquivo(int argc, char** argv){
-    char dir[100];
+FILE *musica_abre_arquivo(int argc, char **argv)
+{
+	char dir[100];
 	// verifica se o diretorio foi informado como argumento
-    if(argc>1){
-		sprintf(dir, "%s", argv[1]);	
-	}else{
+	if (argc > 1)
+	{
+		sprintf(dir, "%s", argv[1]);
+	}
+	else
+	{
 		printf("Diretorio nao informado!\n");
 		exit(EXIT_FAILURE);
 	}
-    // verifica se o arquivo aberto eh valido
-	FILE* file = fopen(dir, "r");
+	// verifica se o arquivo aberto eh valido
+	FILE *file = fopen(dir, "r");
 
-    if(file == NULL){
-        printf("O diretorio de musica'%s' nao existe!\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
+	if (file == NULL)
+	{
+		printf("O diretorio de musica'%s' nao existe!\n", argv[1]);
+		exit(EXIT_FAILURE);
+	}
 
-    return file;
+	return file;
+}
+Musica musica_cria()
+{
+	return (Musica)calloc(900, sizeof(struct musica)); // atencao! tirar isso aqui
 }
 // ler arquivo de musica
-size_t musica_ler(FILE* file, Musica musica){
-    char* linha = NULL;
+size_t musica_ler(FILE *file, Musica musica)
+{
+	char *linha = NULL;
 	size_t len = 0, retorno_get;
-    // leitura de uma linha por vez ate o final do arquivo
+	// leitura de uma linha por vez ate o final do arquivo
 	retorno_get = getline(&linha, &len, file);
-	if(retorno_get == EOF){
-        return(retorno_get);
-    }
-    printf("linha: %s", linha);
-    musica_tok(musica, linha, len);
+	if (retorno_get == EOF)
+	{
+		free(linha);
+		return (retorno_get);
+	}
+	// printf("linha: %s", linha);
+	musica_tok(musica, linha, len); // quebra a string lida e salva no TAD Musica
+	free(linha);
 	return retorno_get;
 }
 // separar as musicas
-void musica_tok(Musica musica, char* musica_str, size_t len){
-	char * atributos;
-    char* token;
-	for(int seletor = 0; seletor < 20; seletor++){
-		token = strtok_r(musica_str, ";", &musica_str);
-        if(token == NULL){
-            break;
-        }
-		printf("i: %d token: %s\n",seletor, token);
-		switch (seletor){
-			case(ID):
-                // musica_salva_string(musica->id, token);
+void musica_tok(Musica musica, char *musica_str, size_t len)
+{
+	// char * atributos;
+	char *token = NULL;
+	for (int seletor = 0; seletor < QTD_ATRIBUTOS_MUSICA; seletor++)
+	{
+		token = strsep(&musica_str, ";");
+		// printf("i: %d token: %s\n",seletor, token);
+		switch (seletor)
+		{
+		case (ID):
+			musica->id = musica_salva_string(token);
 			break;
-			case(NOME_DA_MUSICA):
-                //musica_salva_string(musica->nome_da_musica, token);
+		case (NOME_DA_MUSICA):
+			//musica->nome_da_musica = musica_salva_string(token);
 			break;
-			case(POPULARITY):
-                //musica_salva_inteiro(musica->popularity, token);
+		case (POPULARITY):
+			musica->popularity = musica_salva_inteiro(token);
 			break;
-			case(DURACAO_MS):
-                //
+		case (DURACAO_MS):
+			musica->duracao_ms = musica_salva_inteiro(token);
 			break;
-			case(EXPLICT):
+		case (EXPLICT):
+			musica->explict = musica_salva_inteiro(token);
 			break;
-			case(ARTISTS):
+		case (ARTISTS):
+			//musica->artists = musica_salva_string(token);
 			break;
-			case(ID_ARTISTS):
+		case (ID_ARTISTS):
+			//musica->id_artists = musica_salva_string(token);
 			break;
-			case(DATA_LANCAMENTO):
+		case (DATA_LANCAMENTO):
+			//musica->data_lancamento = musica_salva_string(token);
 			break;
-			case(DANCEABILITY):
+		case (DANCEABILITY):
+			musica->danceability = musica_salva_float(token);
 			break;
-			case(ENERGY):
+		case (ENERGY):
+			musica->energy = musica_salva_float(token);
 			break;
-			case(KEY):
+		case (KEY):
+			musica->key = musica_salva_inteiro(token);
 			break;
-			case(LOUNDNESS):
+		case (LOUNDNESS):
+			musica->loundness = musica_salva_float(token);
 			break;
-			case(MODE):
+		case (MODE):
+			musica->mode = musica_salva_inteiro(token);
 			break;
-			case(SPECHINESS):
+		case (SPECHINESS):
+			musica->speechiness = musica_salva_float(token);
 			break;
-			case(ACOUSTINES):
+		case (ACOUSTINES):
+			musica->acousticness = musica_salva_float(token);
 			break;
-			case(INSTRUMENTALNES):
+		case (INSTRUMENTALNES):
+			musica->instrumentalness = musica_salva_float(token);
 			break;
-			case(LIVENESS):
+		case (LIVENESS):
+			musica->liveness = musica_salva_float(token);
 			break;
-			case(VALENCE):
+		case (VALENCE):
+			musica->valence = musica_salva_float(token);
 			break;
-			case(TEMPO):
+		case (TEMPO):
+			musica->tempo = musica_salva_float(token);
 			break;
-			case(TIME_ASSIGNATURE):
+		case (TIME_ASSIGNATURE):
+			musica->time_assignature = musica_salva_inteiro(token);
 			break;
 		}
-		
 	}
+	// musica->artista_lista = musica_seta_artistas(musica, artists, id_artists);
+	// free(musica_str);
 }
 // alocar musica e retornar seu ponteiro
-//struct vector musica_add(Musica* musica,);
+// struct vector musica_add(Musica* musica,);
 // salvar musica no vetor de musica
 // imprimir uma musica
-void rect_mostrar(Musica musica);
-void musica_destroy(Musica musica);
+void musica_mostrar(Musica musica)
+{
+	printf("id: %s\n", musica->id);
+	//printf("nome: %s\n", musica->nome_da_musica);
+	printf("pop: %d\n", musica->popularity);
+	printf("duracao_ms: %d\n", musica->duracao_ms);
+	printf("explict: %d\n", musica->explict);
+	//printf("artists: %s\n", musica->artists);
+	//printf("id_artists: %s\n", musica->id_artists);
+	//printf("data_lancamento: %s\n", musica->data_lancamento);
+	printf("danceability: %f\n", musica->danceability);
+	printf("energy: %f\n", musica->energy);
+	printf("key: %d\n", musica->key);
+	printf("loundness: %f\n", musica->loundness);
+	printf("mode %d\n", musica->mode);
+	printf("spechiness: %f\n", musica->speechiness);
+	printf("acousticness: %f\n", musica->acousticness);
+	printf("instrumentalness: %f\n", musica->instrumentalness);
+	printf("livenes: %f\n", musica->liveness);
+	printf("valenve: %f\n", musica->valence);
+	printf("tempo: %f\n", musica->tempo);
+	printf("time_assig %d\n", musica->time_assignature);
+}
+void musica_destroy(Musica musica)
+{	printf("Destruido: %s\n\n",musica->id);
+	free(musica->id);
+
+	// free((musica+i)->artists);
+	// free((musica+i)->data_lancamento);
+	// free((musica+i)->nome_da_musica);
+	// free((musica+i)->id_artists);
+}
+
+/*Insercao de informacoes no struct*/
+char *musica_salva_string(char *string_in)
+{
+	char *string_out = strdup(string_in);
+	return string_out;
+}
+float musica_salva_float(char *float_str)
+{
+	return atof(float_str);
+}
+int musica_salva_inteiro(char *inteiro_str)
+{
+	return atoi(inteiro_str);
+}
+/* separa uma string a cada | em uma matriz dinamica - serve para organizar uma lista de
+artistas ou seus ids a fim de encontra-los posteriormerte para o armazenamento no struct*/
+/*char** musica_salva_artistas_str(char* artistas_str){
+	char* token = artistas_str;
+	char** artistas_out ; // alocar
+
+	for(int i=0; token != NULL; i++) {
+		strsep(&artistas_str, "|");
+		artistas_out[i] = strdup(token);
+		// realoca artistas
+		puts(token);
+		token = artistas_str;
+	}
+	return artistas_out;
+}
+*/
