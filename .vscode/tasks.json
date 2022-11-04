@@ -8,10 +8,10 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "main.c",
-                "tads/Musica.c",
-                "tads/Vector.c",
+                "Musica.c",
+                "Vector.c",
                 "-o",
-                "${fileDirname}\\main.exe"
+                "${workspaceFolder}/main.exe"
             ],
             "options": {
                 "cwd": "${fileDirname}"

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tads/Musica.h"
-#include "tads/Vector.h"
+#include <Musica.h>
+#include <Vector.h>
 
 int main(int argc, char **argv)
 {
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 
     }
 	// int len = vector_size(vetor_musica);
-	// teste de exibicao de musica
+	// //teste de exibicao de musica
 	// for(int i=0; i<len; i++){
 	// 	musica_print(vector_get(vetor_musica, i));
 	// }
