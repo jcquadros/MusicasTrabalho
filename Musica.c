@@ -25,30 +25,30 @@ enum
 } Musca_atributos;
 
 // informacoes do tipo musica
-// struct musica
-// {
-// 	char *id;
-// 	char *nome_da_musica;
-// 	int popularity;
-// 	int duracao_ms;
-// 	int explict;
-// 	// Artista* artistas_lista;
-// 	char *artists;
-// 	char *id_artists;
-// 	char *data_lancamento;
-// 	float danceability;
-// 	float energy; //
-// 	int key;
-// 	float loundness;
-// 	int mode;				//
-// 	float speechiness;		//
-// 	float acousticness;		//
-// 	float instrumentalness; //
-// 	float liveness;			//
-// 	float valence;			//
-// 	float tempo;
-// 	int time_assignature;
-// };
+struct musica
+{
+	char *id;
+	char *nome_da_musica;
+	int popularity;
+	int duracao_ms;
+	int explict;
+	// Artista* artistas_lista;
+	char *artists;
+	char *id_artists;
+	char *data_lancamento;
+	float danceability;
+	float energy; //
+	int key;
+	float loundness;
+	int mode;				//
+	float speechiness;		//
+	float acousticness;		//
+	float instrumentalness; //
+	float liveness;			//
+	float valence;			//
+	float tempo;
+	int time_assignature;
+};
 
 FILE *musica_abre_arquivo(int argc, char **argv)
 {
@@ -74,11 +74,21 @@ FILE *musica_abre_arquivo(int argc, char **argv)
 
 	return file;
 }
+
 Musica musica_cria()
 {
-	return (Musica)calloc(900, sizeof(struct musica)); // atencao! tirar isso aqui
+	return (Musica)calloc(900, sizeof(struct musica));// atencao
 }
-// ler arquivo de musica
+
+void musicas_ler_full(FILE *file, Musica musica)
+{
+	int i = 0;
+	while (musica_ler(file, musica + i) != EOF)
+	{
+		musica_mostrar(musica + i);
+		i++;
+	}
+}
 size_t musica_ler(FILE *file, Musica musica)
 {
 	char *linha = NULL;
@@ -95,10 +105,10 @@ size_t musica_ler(FILE *file, Musica musica)
 	free(linha);
 	return retorno_get;
 }
+
 // separar as musicas
 void musica_tok(Musica musica, char *musica_str, size_t len)
 {
-	// char * atributos;
 	char *token = NULL;
 	for (int seletor = 0; seletor < QTD_ATRIBUTOS_MUSICA; seletor++)
 	{
@@ -110,7 +120,7 @@ void musica_tok(Musica musica, char *musica_str, size_t len)
 			musica->id = musica_salva_string(token);
 			break;
 		case (NOME_DA_MUSICA):
-			//musica->nome_da_musica = musica_salva_string(token);
+			musica->nome_da_musica = musica_salva_string(token);
 			break;
 		case (POPULARITY):
 			musica->popularity = musica_salva_inteiro(token);
@@ -122,13 +132,13 @@ void musica_tok(Musica musica, char *musica_str, size_t len)
 			musica->explict = musica_salva_inteiro(token);
 			break;
 		case (ARTISTS):
-			//musica->artists = musica_salva_string(token);
+			musica->artists = musica_salva_string(token);
 			break;
 		case (ID_ARTISTS):
-			//musica->id_artists = musica_salva_string(token);
+			musica->id_artists = musica_salva_string(token);
 			break;
 		case (DATA_LANCAMENTO):
-			//musica->data_lancamento = musica_salva_string(token);
+			musica->data_lancamento = musica_salva_string(token);
 			break;
 		case (DANCEABILITY):
 			musica->danceability = musica_salva_float(token);
@@ -168,23 +178,19 @@ void musica_tok(Musica musica, char *musica_str, size_t len)
 			break;
 		}
 	}
-	// musica->artista_lista = musica_seta_artistas(musica, artists, id_artists);
-	// free(musica_str);
 }
-// alocar musica e retornar seu ponteiro
-// struct vector musica_add(Musica* musica,);
-// salvar musica no vetor de musica
+
 // imprimir uma musica
 void musica_mostrar(Musica musica)
 {
 	printf("id: %s\n", musica->id);
-	//printf("nome: %s\n", musica->nome_da_musica);
+	printf("nome: %s\n", musica->nome_da_musica);
 	printf("pop: %d\n", musica->popularity);
 	printf("duracao_ms: %d\n", musica->duracao_ms);
 	printf("explict: %d\n", musica->explict);
-	//printf("artists: %s\n", musica->artists);
-	//printf("id_artists: %s\n", musica->id_artists);
-	//printf("data_lancamento: %s\n", musica->data_lancamento);
+	printf("artists: %s\n", musica->artists);
+	printf("id_artists: %s\n", musica->id_artists);
+	printf("data_lancamento: %s\n", musica->data_lancamento);
 	printf("danceability: %f\n", musica->danceability);
 	printf("energy: %f\n", musica->energy);
 	printf("key: %d\n", musica->key);
@@ -199,13 +205,21 @@ void musica_mostrar(Musica musica)
 	printf("time_assig %d\n", musica->time_assignature);
 }
 void musica_destroy(Musica musica)
-{	printf("Destruido: %s\n\n",musica->id);
-	free(musica->id);
-
-	// free((musica+i)->artists);
-	// free((musica+i)->data_lancamento);
-	// free((musica+i)->nome_da_musica);
-	// free((musica+i)->id_artists);
+{
+	for (int i = 0; i < 900; i++)
+	{
+		musica_atributos_destroy(musica, i);
+	}
+	free(musica);
+}
+// destroi a posicao de uma musica
+void musica_atributos_destroy(Musica musica, int idx)
+{
+	free((musica + idx)->id);
+	free((musica + idx)->artists);
+	free((musica + idx)->data_lancamento);
+	free((musica + idx)->nome_da_musica);
+	free((musica + idx)->id_artists);
 }
 
 /*Insercao de informacoes no struct*/
