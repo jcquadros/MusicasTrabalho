@@ -1,37 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Musica.h"
-#include "Vector.h"
+#include "tads/Musica.h"
+#include "tads/Vector.h"
 
 int main(int argc, char **argv)
-{	
+{
 
 	FILE *file = musica_abre_arquivo(argc, argv);
-	Vector vetor_musica = vector_create();
-	
-	// Musica musica = musica_cria();
-
-	// musicas_ler_full(file, musica);
-	// musica_destroy(musica);
-
+	Vector vetor_musica = vector_create(MUSICA);
 	size_t retorno = 1;
-    while (retorno != EOF)
-    { 
+    while (1)
+    {
 		// cria uma musica
-		Musica musica = musica_cria();
+		Musica musica = musica_create();
 
-		// le os dados do retangulo
-		retorno = musica_ler(file, musica);
+		// le os dados de uma musica
+		retorno = musica_read(file, musica);
+		// para a execucao assim que o arquivo acabar
 
-		// adiciona o retangulo no fim do vector
+		if (retorno == EOF){
+			free(musica);
+			break;
+		}
+
+
+		// adiciona a musica na ultima posicao do vetor
 		vector_add(vetor_musica, musica);
-		// vector_mostra
-		// vector_destroy
-
 
     }
-
-
+	// int len = vector_size(vetor_musica);
+	// teste de exibicao de musica
+	// for(int i=0; i<len; i++){
+	// 	musica_print(vector_get(vetor_musica, i));
+	// }
+	vector_destroy(vetor_musica);
 	fclose(file);
 	return 0;
 }

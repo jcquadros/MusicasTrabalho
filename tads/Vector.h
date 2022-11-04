@@ -1,6 +1,12 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
-typedef enum type Type;
+
+typedef enum type{
+    MUSICA,
+    INT,
+    FLOAT,
+    CHAR
+}Type;
 
 typedef void *VectorType;
 

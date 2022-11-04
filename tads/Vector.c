@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Vector.h"
-enum type{
-    MUSICA,
-    INT,
-    FLOAT,
-    CHAR
-}Type;
+#include "Musica.h"
+//#inlcude "Artista.h"
+
 
 struct vector
 {
@@ -15,6 +12,7 @@ struct vector
     int n_alocados; // numero de alocados
     int n_add;      // numero de adicionados
 };
+
 // passar um enum como parametro para decidir qual tipo sera posto
 Vector vector_create(enum type tipo)
 {
@@ -25,9 +23,7 @@ Vector vector_create(enum type tipo)
     v->data = (VectorType *)calloc(v->n_alocados, sizeof(VectorType));
     return v;
 }
-Vector vector_le_arquivo(FILE *file){
-    
-}
+
 void vector_add(Vector v, VectorType elem)
 {
     if (v->n_add == v->n_alocados)
@@ -58,6 +54,11 @@ int vector_size(Vector v)
 
 void vector_destroy(Vector v)
 {
+    int n_musicas = vector_size(v);
+    // destroi as musicas
+	for (int i=0; i<n_musicas; i++){
+		musica_destroy(v->data[i]);
+	}
     free(v->data);
     free(v);
 }
