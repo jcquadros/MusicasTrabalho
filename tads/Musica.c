@@ -77,7 +77,7 @@ FILE *musica_abre_arquivo(int argc, char **argv)
 
 Musica musica_create()
 {
-	return (Musica)calloc(900, sizeof(struct musica));// atencao
+	return (Musica)calloc(1, sizeof(struct musica));
 }
 
 
@@ -93,13 +93,13 @@ size_t musica_read(FILE *file, Musica musica)
 		return (retorno_get);
 	}
 	// printf("linha: %s", linha);
-	musica_tok(musica, linha, len); // quebra a string lida e salva no TAD Musica
+	musica_tok(musica, linha); // quebra a string lida e salva no TAD Musica
 	free(linha);
-	return retorno_get;
+	return retorno_get; 
 }
 
 // separar as musicas
-void musica_tok(Musica musica, char *musica_str, size_t len)
+void musica_tok(Musica musica, char *musica_str)
 {
 	char *token = NULL;
 	for (int seletor = 0; seletor < QTD_ATRIBUTOS_MUSICA; seletor++)
