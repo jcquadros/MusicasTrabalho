@@ -1,6 +1,7 @@
 #ifndef _MUSICAS_H_
 #define _MUSICAS_H_
 /*Numeros magicos*/
+
 #define ALOCAR 100
 #define QTD_ATRIBUTOS_MUSICA 20
 #include <stdlib.h>
@@ -20,7 +21,7 @@ Musica musica_create();
 size_t musica_read(FILE *file, Musica musica);
 
 // separar as informacoes da musica em tokens e armazena-la no tipo
-void musica_tok(Musica musica, char *musica_str, size_t len);
+void musica_tok(Musica musica, char *musica_str);
 
 // imprimir uma musica
 void musica_print(Musica musica);
