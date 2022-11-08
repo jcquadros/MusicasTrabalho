@@ -14,7 +14,7 @@ typedef void *VectorType;
 
 typedef struct vector *Vector;
 
-// aloca espaco e inicializa um vector
+// aloca espaco e inicializa um vector para musicas e artistas
 Vector vector_create(enum type tipo);
 
 // adiciona um elemento ao final de um vector
@@ -23,18 +23,15 @@ void vector_add(Vector v, VectorType elem);
 // retorna o elemento da posicao idx do vector
 VectorType vector_get(Vector v, int idx);
 
-// retorna o numero de elementos inseridos em v
+// recupera  o tamanho do vetor
 int vector_size(Vector v);
 
-// busca o indice da primeira ocorrencia do id em v, ou retorna -1 se o
-// elem nao existir em v
+// encontra a posicao de determinado elemento da lista
 int vector_find_id(Vector v, char *id);
+// cria uma lista de indices dos artistas de uma musica
 int* vector_cria_lista_artistas(VectorType musica, Vector artistas);
 
-// remove o elemento da posicao idx em v
-void vector_remove(Vector v, int idx);
-
-// desaloca v e suas estruturas internas
+// libera toda a memoria alocada em v
 void vector_destroy(Vector v);
 
 

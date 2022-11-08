@@ -43,12 +43,12 @@ FILE *artista_abre_arquivo(int argc, char **argv)
 
     return file;
 }
-
+// aloca espaco para uma artista
 Artista artista_create()
 {
     return (Artista)calloc(1, sizeof(struct artista));
 }
-
+// ler arquivo de artista
 size_t artista_read(FILE *file, Artista artista)
 {
     char *linha = NULL;
@@ -64,7 +64,7 @@ size_t artista_read(FILE *file, Artista artista)
     free(linha);
     return retorno_get;
 }
-
+// separar as informacoes do artista em tokens e armazena em artista
 void artista_tok(Artista artista, char *artista_str)
 {
     char *token = NULL;
@@ -95,6 +95,7 @@ void artista_tok(Artista artista, char *artista_str)
     }
 }
 
+// imprimir uma artista
 void artista_print(Artista artista)
 {
     printf("ID: %s\n", artista->id);
@@ -107,6 +108,7 @@ void artista_print(Artista artista)
     printf("POPULARIDADE: %d\n", artista->popularidade);
 }
 
+// salva atributos da artista
 char *artista_salva_string(char *string_in)
 {
     char *string_out = strdup(string_in); // copia as informacoes de uma string para outra
@@ -120,8 +122,12 @@ int artista_salva_inteiro(char *inteiro_str)
 {
     return atoi(inteiro_str); // converte para inteiro
 }
+// os generos sao tratados de forma diferente
+// na string sao separados por um pipeline
+// entao seu conteudo eh separado e salvo em um char**
 char **artista_salva_generos(char *generos_str, int *generos_len)
 {
+
     int n_alocados = 1, n_add = 0;
     char **generos_lista = (char **)malloc(n_alocados * sizeof(char *));
     char *token = generos_str;
@@ -150,7 +156,7 @@ char **artista_salva_generos(char *generos_str, int *generos_len)
     *generos_len = n_add;
     return generos_lista;
 }
-
+// desaloca artista
 void artista_destroy(Artista artista)
 {
     free(artista->id);

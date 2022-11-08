@@ -19,7 +19,7 @@ Artista artista_create();
 // ler arquivo de artista
 size_t artista_read(FILE *file, Artista artista);
 
-// separar as informacoes da artista em tokens e armazena-la no tipo
+// separar as informacoes do artista em tokens e armazena em artista
 void artista_tok(Artista artista, char *artista_str);
 
 // imprimir uma artista

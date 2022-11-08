@@ -20,7 +20,7 @@ Musica musica_create();
 // ler arquivo de musica
 size_t musica_read(FILE *file, Musica musica);
 
-// separar as informacoes da musica em tokens e armazena-la no tipo
+// separar as informacoes da musica em tokens e armazena no tipo musica
 void musica_tok(Musica musica, char *musica_str);
 
 // imprimir uma musica
