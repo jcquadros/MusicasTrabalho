@@ -66,8 +66,48 @@ void vector_destroy(Vector v)
 		    artista_destroy(v->data[i]);
 	    }
     }
-    
+
     free(v->data);
     free(v);
+}
+
+int vector_find_id(Vector v, char *id){
+    char *item;
+    int i;
+    // encontrando um elemento do tipo artista pelo seu id
+    if(v->tipo == ARTISTA){
+        Artista artista;
+        for(i=0; i<v->n_add; i++){
+            artista = vector_get(v,i);
+            if(strcmp(id, artista_get_id(artista)) == STR_IGUAIS){ // se os ids forem iguais
+                return i;
+            }
+        }
+    // encontrando um elemento do tipo musica pelo seu id
+    }else if(v->tipo == MUSICA){
+        Musica musica;
+        for(i=0; i<v->n_add; i++){
+            musica = vector_get(v,i);
+
+            if(strcmp(id, musica_get_id(musica)) == STR_IGUAIS){ // se os ids forem iguais
+
+                return i;
+            }
+        }
+    }
+    // caso nao seja encontrado nenhum elemento em comum retorna -1
+    return -1;
+}
+
+// funcao para criar uma lista de artistas (pelo indice)
+int* vector_cria_lista_artistas(VectorType musica, Vector artistas){
+    char **lista_artistas = musica_get_lista_artistas(musica); // recupera a lista de ids dos artistas armazenadas em musica
+    int n_artistas = musica_get_n_artistas(musica); // recupera a quantidade de artistas da musica
+    int *idx_artistas =  (int*)malloc(n_artistas *sizeof(int));
+    for(int i=0; i<n_artistas; i++){
+        // rastreia o id desse artista
+        idx_artistas[i] = vector_find_id(artistas, lista_artistas[i]); // armazena a posicao de cada artista
+    }
+    return idx_artistas;
 }
 
