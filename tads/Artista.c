@@ -21,7 +21,7 @@ enum artista_atributos
 
 FILE *artista_abre_arquivo(int argc, char **argv)
 {
-    char dir[100] = "data/artists_2.csv";
+    char dir[100] = "data/artists_full.csv";
     // verifica se o diretorio foi informado como argumento
     // if (argc > 1)
     // {
@@ -161,4 +161,9 @@ void artista_destroy(Artista artista)
     free(artista->generos);
     free(artista->nome_do_artista);
     free(artista);
+}
+
+
+char *artista_get_id(Artista artista){
+    return artista->id;
 }

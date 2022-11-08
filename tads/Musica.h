@@ -34,4 +34,8 @@ char *musica_salva_string(char *string_in);
 float musica_salva_float(char *float_str);
 int musica_salva_inteiro(char *inteiro_str);
 char **musica_salva_artistas(char *artistas_str, int *n_artistas);
+char *musica_get_id(Musica musica);
+Musica musica_add_idx_artistas(Musica musica, int *idx_artistas);
+char **musica_get_lista_artistas(Musica musica);
+int musica_get_n_artistas(Musica musica);
 #endif

@@ -34,4 +34,7 @@ float artista_salva_float(char *float_str);
 int artista_salva_inteiro(char *inteiro_str);
 char **artista_salva_generos(char *generos_str, int *generos_len);
 
+// recupera o valor de elementos
+char *artista_get_id(Artista artista);
+
 #endif

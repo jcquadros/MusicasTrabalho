@@ -1,5 +1,6 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
+#define STR_IGUAIS 0
 
 typedef enum type{
     MUSICA,
@@ -25,9 +26,10 @@ VectorType vector_get(Vector v, int idx);
 // retorna o numero de elementos inseridos em v
 int vector_size(Vector v);
 
-// busca o indice da primeira ocorrencia de elem em v, ou retorna -1 se o
+// busca o indice da primeira ocorrencia do id em v, ou retorna -1 se o
 // elem nao existir em v
-int vector_find(Vector v, VectorType elem);
+int vector_find_id(Vector v, char *id);
+int* vector_cria_lista_artistas(VectorType musica, Vector artistas);
 
 // remove o elemento da posicao idx em v
 void vector_remove(Vector v, int idx);

@@ -32,10 +32,10 @@ struct musica
 	int popularity;
 	int duracao_ms;
 	int explict;
-	// Artista* artistas_lista;
 	int n_artistas;
 	char **artists;
 	char **id_artists;
+	int *idx_artists;
 	char *data_lancamento;
 	float danceability;
 	float energy; //
@@ -96,7 +96,7 @@ size_t musica_read(FILE *file, Musica musica)
 	// printf("linha: %s", linha);
 	musica_tok(musica, linha); // quebra a string lida e salva no TAD Musica
 	free(linha);
-	return retorno_get; 
+	return retorno_get;
 }
 
 // separar as musicas
@@ -184,6 +184,7 @@ void musica_print(Musica musica)
 	for(int i = 0; i < musica->n_artistas; i++){
 		printf("artists: %s\n", musica->artists[i]);
 		printf("id_artists: %s\n", musica->id_artists[i]);
+		printf("indice: %d\n",musica->idx_artists[i] );
 
 	}
 	printf("data_lancamento: %s\n", musica->data_lancamento);
@@ -207,10 +208,11 @@ void musica_destroy(Musica musica)
 	free(musica->id);
 	for(int i = 0; i < musica->n_artistas; i++){
 		free(musica->artists[i]);
-		free(musica->id_artists[i]);	
+		free(musica->id_artists[i]);
 	}
 	free(musica->artists);
 	free(musica->id_artists);
+	free(musica->idx_artists);
 	free(musica->data_lancamento);
 	free(musica->nome_da_musica);
 	free(musica);
@@ -259,4 +261,19 @@ char **musica_salva_artistas(char *artistas_str, int *n_artistas)
     }
     *n_artistas = n_add;
     return artistas_lista;
+}
+
+
+char *musica_get_id(Musica musica){
+	return musica->id;
+}
+char **musica_get_lista_artistas(Musica musica){
+	return musica->id_artists;
+}
+int musica_get_n_artistas(Musica musica){
+	return musica->n_artistas;
+}
+Musica musica_add_idx_artistas(Musica musica, int *idx_artistas){
+	musica->idx_artists = idx_artistas;
+	return musica;
 }
