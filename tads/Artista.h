@@ -22,8 +22,14 @@ size_t artista_read(FILE *file, Artista artista);
 // separar as informacoes do artista em tokens e armazena em artista
 void artista_tok(Artista artista, char *artista_str);
 
-// imprimir uma artista
+// imprimir um artista
 void artista_print(Artista artista);
+// imprime cada atributo do artista de forma individual
+void artista_print_id(Artista artista);
+void artista_print_seguidores(Artista artista);
+void artista_print_nome(Artista artista);
+void artista_print_popularidade(Artista artista);
+void artista_print_generos(Artista artista);
 
 // desaloca artista
 void artista_destroy(Artista artista);
@@ -34,7 +40,12 @@ float artista_salva_float(char *float_str);
 int artista_salva_inteiro(char *inteiro_str);
 char **artista_salva_generos(char *generos_str, int *generos_len);
 
-// recupera o valor de elementos
+// recupera o valor de um elemento do tipo artista
 char *artista_get_id(Artista artista);
+float artista_get_seguidores(Artista artista);
+char **artista_get_generos(Artista artista);
+int artista_get_n_generos(Artista artista);
+char *artista_get_nome(Artista artista);
+int artista_get_popularidade(Artista artista);
 
 #endif

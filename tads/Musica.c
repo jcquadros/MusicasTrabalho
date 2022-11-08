@@ -81,7 +81,6 @@ Musica musica_create()
 	return (Musica)calloc(1, sizeof(struct musica));
 }
 
-
 size_t musica_read(FILE *file, Musica musica)
 {
 	char *linha = NULL;
@@ -176,37 +175,107 @@ void musica_tok(Musica musica, char *musica_str)
 // imprimir uma musica
 void musica_print(Musica musica)
 {
-	printf("id: %s\n", musica->id);
-	printf("nome: %s\n", musica->nome_da_musica);
-	printf("pop: %d\n", musica->popularity);
-	printf("duracao_ms: %d\n", musica->duracao_ms);
-	printf("explict: %d\n", musica->explict);
-	for(int i = 0; i < musica->n_artistas; i++){
-		printf("artists: %s\n", musica->artists[i]);
-		printf("id_artists: %s\n", musica->id_artists[i]);
-		printf("indice: %d\n",musica->idx_artists[i] );
+	musica_print_id(musica);
+	musica_print_nome(musica);
+	musica_print_popularidade(musica);
+	musica_print_duracao(musica);
+	musica_print_explict(musica);
+	musica_print_artistas(musica);
+	musica_print_data_lancamento(musica);
+	musica_print_danceability(musica);
+	musica_print_energy(musica);
+	musica_print_key(musica);
+	musica_print_loundness(musica);
+	musica_print_mode(musica);
+	musica_print_spechiness(musica);
+	musica_print_instrumentalness(musica);
+	musica_print_liveness(musica);
+	musica_print_tempo(musica);
+	musica_print_time_assignarure(musica);
+}
 
+// imprime cada atributo da musica de forma individual
+void musica_print_id(Musica musica)
+{
+	printf("ID: %s\n", musica_get_id(musica));
+}
+void musica_print_nome(Musica musica)
+{
+	printf("NOME: %s\n", musica_get_nome(musica));
+}
+void musica_print_popularidade(Musica musica)
+{
+	printf("POPULARIDADE: %d\n", musica_get_popularidade(musica));
+}
+void musica_print_duracao(Musica musica)
+{
+	printf("DURACAO MS: %d\n", musica_get_duracao(musica));
+}
+void musica_print_explict(Musica musica)
+{
+	printf("EXPLICT: %d\n", musica_get_explict(musica));
+}
+void musica_print_artistas(Musica musica)
+{
+	int *indice_artistas = musica_get_indices(musica);
+	printf("ARTISTAS: ");
+	for (int i = 0; i < musica->n_artistas; i++)
+	{
+		printf("[%d] ", indice_artistas[i]);
 	}
-	printf("data_lancamento: %s\n", musica->data_lancamento);
-	printf("danceability: %f\n", musica->danceability);
-	printf("energy: %f\n", musica->energy);
-	printf("key: %d\n", musica->key);
-	printf("loundness: %f\n", musica->loundness);
-	printf("mode %d\n", musica->mode);
-	printf("spechiness: %f\n", musica->speechiness);
-	printf("acousticness: %f\n", musica->acousticness);
-	printf("instrumentalness: %f\n", musica->instrumentalness);
-	printf("livenes: %f\n", musica->liveness);
-	printf("valenve: %f\n", musica->valence);
-	printf("tempo: %f\n", musica->tempo);
-	printf("time_assig %d\n", musica->time_assignature);
+	printf("\n");
+}
+void musica_print_data_lancamento(Musica musica)
+{
+	printf("DATA DE LANCAMENTO: %s\n", musica_get_data_lancamento(musica));
+}
+void musica_print_danceability(Musica musica)
+{
+	printf("DANCEABILITY: %.2f\n", musica_get_danceability(musica));
+}
+void musica_print_energy(Musica musica)
+{
+	printf("ENERGY: %.2f\n", musica_get_energy(musica));
+}
+void musica_print_key(Musica musica)
+{
+	printf("KEY: %d\n", musica_get_key(musica));
+}
+void musica_print_loundness(Musica musica)
+{
+	printf("LOUNDNESS: %.2f\n", musica_get_loundness(musica));
+}
+void musica_print_mode(Musica musica)
+{
+	printf("MODE: %d\n", musica_get_mode(musica));
+}
+void musica_print_spechiness(Musica musica)
+{
+	printf("SPECHINESS: %.2f\n", musica_get_spechiness(musica));
+}
+void musica_print_instrumentalness(Musica musica)
+{
+	printf("INSTRUMENTALNESS: %.2f\n", musica_get_instrumentalness(musica));
+}
+void musica_print_liveness(Musica musica)
+{
+	printf("LIVENESS: %.2f\n", musica_get_liveness(musica));
+}
+void musica_print_tempo(Musica musica)
+{
+	printf("TEMPO: %.2f\n", musica_get_tempo(musica));
+}
+void musica_print_time_assignarure(Musica musica)
+{
+	printf("TIME ASSIGNATURE: %d\n", musica_get_time_assignature(musica));
 }
 
 // desaloca uma musica
 void musica_destroy(Musica musica)
 {
 	free(musica->id);
-	for(int i = 0; i < musica->n_artistas; i++){
+	for (int i = 0; i < musica->n_artistas; i++)
+	{
 		free(musica->artists[i]);
 		free(musica->id_artists[i]);
 	}
@@ -222,7 +291,7 @@ void musica_destroy(Musica musica)
 char *musica_salva_string(char *string_in)
 {
 	char *string_out = strdup(string_in); // copia as informacoes de uma string para outra
-	return string_out; // retorna seu ponteiro
+	return string_out;					  // retorna seu ponteiro
 }
 float musica_salva_float(char *float_str)
 {
@@ -234,46 +303,114 @@ int musica_salva_inteiro(char *inteiro_str)
 }
 char **musica_salva_artistas(char *artistas_str, int *n_artistas)
 {
-    int n_alocados = 1, n_add = 0;
-    char **artistas_lista = (char **)malloc(n_alocados * sizeof(char *));
-    char *token = artistas_str;
-    // recebe uma string de artistas e separa a cada pipeline
-    while (1)
-    {
-        // quebra o artista a cada pipeline
-        token = strsep(&artistas_str, "|");
+	int n_alocados = 1, n_add = 0;
+	char **artistas_lista = (char **)malloc(n_alocados * sizeof(char *));
+	char *token = artistas_str;
+	// recebe uma string de artistas e separa a cada pipeline
+	while (1)
+	{
+		// quebra o artista a cada pipeline
+		token = strsep(&artistas_str, "|");
 
-        if (token != NULL)
-        { // uma string valida
-            n_add++;
-            if (n_add == n_alocados)
-            {
-                n_alocados *= 2;
-                artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
-            }
-        }
-        else
-        {
-            // se a string acaba, o loop eh encerrado
-            break;
-        }
-        artistas_lista[n_add - 1] = strdup(token); // salva o artista na lista
-    }
-    *n_artistas = n_add;
-    return artistas_lista;
+		if (token != NULL)
+		{ // uma string valida
+			n_add++;
+			if (n_add == n_alocados)
+			{
+				n_alocados *= 2;
+				artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
+			}
+		}
+		else
+		{
+			// se a string acaba, o loop eh encerrado
+			break;
+		}
+		artistas_lista[n_add - 1] = strdup(token); // salva o artista na lista
+	}
+	*n_artistas = n_add;
+	return artistas_lista;
 }
 
-
-char *musica_get_id(Musica musica){
+// recupera atributos de musica de orma individual
+char *musica_get_nome(Musica musica)
+{
+	return musica->nome_da_musica;
+}
+int musica_get_popularidade(Musica musica)
+{
+	return musica->popularity;
+}
+int musica_get_duracao(Musica musica)
+{
+	return musica->duracao_ms;
+}
+int musica_get_explict(Musica musica)
+{
+	return musica->explict;
+}
+int *musica_get_indices(Musica musica)
+{
+	return musica->idx_artists;
+}
+char *musica_get_data_lancamento(Musica musica)
+{
+	return musica->data_lancamento;
+}
+float musica_get_danceability(Musica musica)
+{
+	return musica->danceability;
+}
+float musica_get_energy(Musica musica)
+{
+	return musica->energy;
+}
+int musica_get_key(Musica musica)
+{
+	return musica->key;
+}
+float musica_get_loundness(Musica musica)
+{
+	return musica->loundness;
+}
+int musica_get_mode(Musica musica)
+{
+	return musica->mode;
+}
+float musica_get_spechiness(Musica musica)
+{
+	return musica->speechiness;
+}
+float musica_get_instrumentalness(Musica musica)
+{
+	return musica->instrumentalness;
+}
+float musica_get_liveness(Musica musica)
+{
+	return musica->liveness;
+}
+float musica_get_tempo(Musica musica)
+{
+	return musica->tempo;
+}
+int musica_get_time_assignature(Musica musica)
+{
+	return musica->time_assignature;
+}
+char *musica_get_id(Musica musica)
+{
 	return musica->id;
 }
-char **musica_get_lista_artistas(Musica musica){
+char **musica_get_lista_artistas(Musica musica)
+{
 	return musica->id_artists;
 }
-int musica_get_n_artistas(Musica musica){
+int musica_get_n_artistas(Musica musica)
+{
 	return musica->n_artistas;
 }
-Musica musica_add_idx_artistas(Musica musica, int *idx_artistas){
+Musica musica_add_idx_artistas(Musica musica, int *idx_artistas)
+{
 	musica->idx_artists = idx_artistas;
 	return musica;
 }

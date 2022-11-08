@@ -98,14 +98,38 @@ void artista_tok(Artista artista, char *artista_str)
 // imprimir uma artista
 void artista_print(Artista artista)
 {
-    printf("ID: %s\n", artista->id);
-    printf("SEGUIDORES: %.2f\n", artista->seguidores);
+    artista_print_id(artista);
+    artista_print_seguidores(artista);
+    artista_print_generos(artista);
+    artista_print_nome(artista);
+    artista_print_popularidade(artista);
+}
+// funcoes auxiliares de impressao individual
+void artista_print_id(Artista artista)
+{
+    printf("ID: %s\n", artista_get_id(artista));
+}
+void artista_print_seguidores(Artista artista)
+{
+    printf("SEGUIDORES: %.2f\n", artista_get_seguidores(artista));
+}
+void artista_print_nome(Artista artista)
+{
+    printf("NOME_DO_ARTISTA: %s\n", artista_get_nome(artista));
+}
+void artista_print_popularidade(Artista artista)
+{
+    printf("POPULARIDADE: %d\n", artista_get_popularidade(artista));
+}
+void artista_print_generos(Artista artista)
+{
+    char **generos = artista_get_generos(artista);
+    printf("GENEROS: ");
     for (int i = 0; i < artista->n_generos; i++)
     {
-        printf("GENEROS: %s\n", artista->generos[i]);
+        printf("%s / ", generos[i]);
     }
-    printf("NOME_DO_ARTISTA: %s\n", artista->nome_do_artista);
-    printf("POPULARIDADE: %d\n", artista->popularidade);
+    printf("\n");
 }
 
 // salva atributos da artista
@@ -122,6 +146,7 @@ int artista_salva_inteiro(char *inteiro_str)
 {
     return atoi(inteiro_str); // converte para inteiro
 }
+
 // os generos sao tratados de forma diferente
 // na string sao separados por um pipeline
 // entao seu conteudo eh separado e salvo em um char**
@@ -169,7 +194,27 @@ void artista_destroy(Artista artista)
     free(artista);
 }
 
-
-char *artista_get_id(Artista artista){
-    return artista->id;
+char *artista_get_id(Artista artista)
+{
+    return artista->id; // recupera  o id
+}
+float artista_get_seguidores(Artista artista)
+{
+    return artista->seguidores; // recupera seguidor
+}
+char **artista_get_generos(Artista artista)
+{
+    return artista->generos; // recupera genero
+}
+int artista_get_n_generos(Artista artista)
+{
+    return artista->n_generos; // recupera quantidade de generos
+}
+char *artista_get_nome(Artista artista)
+{
+    return artista->nome_do_artista; // recupera o nome do artista
+}
+int artista_get_popularidade(Artista artista)
+{
+    return artista->popularidade; // recupera a popularidade
 }
