@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "Vector.h"
 #include "Musica.h"
-//#inlcude "Artista.h"
+#include "Artista.h"
 
 
 struct vector
@@ -54,11 +54,20 @@ int vector_size(Vector v)
 
 void vector_destroy(Vector v)
 {
-    int n_musicas = vector_size(v);
-    // destroi as musicas
-	for (int i=0; i<n_musicas; i++){
-		musica_destroy(v->data[i]);
-	}
+    int size = vector_size(v); // recupera o tamanho do vector a ser desalocado
+    if(v->tipo == MUSICA){
+        // destroi as musicas
+	    for (int i=0; i<size; i++){
+		    musica_destroy(v->data[i]);
+	    }
+    }else if(v->tipo == ARTISTA){
+        //destroi os artistas
+        for (int i=0; i<size; i++){
+		    artista_destroy(v->data[i]);
+	    }
+    }
+    
     free(v->data);
     free(v);
 }
+
