@@ -33,7 +33,5 @@ void musica_destroy(Musica musica);
 char *musica_salva_string(char *string_in);
 float musica_salva_float(char *float_str);
 int musica_salva_inteiro(char *inteiro_str);
-// IGNORE
-// musica->artista_lista = musica_seta_artistas(musica, artists, id_artists);
-//char **musica_salva_artistas_str(char *artistas_str);
+char **musica_salva_artistas(char *artistas_str, int *n_artistas);
 #endif

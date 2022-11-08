@@ -33,8 +33,9 @@ struct musica
 	int duracao_ms;
 	int explict;
 	// Artista* artistas_lista;
-	char *artists;
-	char *id_artists;
+	int n_artistas;
+	char **artists;
+	char **id_artists;
 	char *data_lancamento;
 	float danceability;
 	float energy; //
@@ -124,10 +125,10 @@ void musica_tok(Musica musica, char *musica_str)
 			musica->explict = musica_salva_inteiro(token);
 			break;
 		case (ARTISTS):
-			musica->artists = musica_salva_string(token);
+			musica->artists = musica_salva_artistas(token, &musica->n_artistas);
 			break;
 		case (ID_ARTISTS):
-			musica->id_artists = musica_salva_string(token);
+			musica->id_artists = musica_salva_artistas(token, &musica->n_artistas);
 			break;
 		case (DATA_LANCAMENTO):
 			musica->data_lancamento = musica_salva_string(token);
@@ -180,8 +181,11 @@ void musica_print(Musica musica)
 	printf("pop: %d\n", musica->popularity);
 	printf("duracao_ms: %d\n", musica->duracao_ms);
 	printf("explict: %d\n", musica->explict);
-	printf("artists: %s\n", musica->artists);
-	printf("id_artists: %s\n", musica->id_artists);
+	for(int i = 0; i < musica->n_artistas; i++){
+		printf("artists: %s\n", musica->artists[i]);
+		printf("id_artists: %s\n", musica->id_artists[i]);
+
+	}
 	printf("data_lancamento: %s\n", musica->data_lancamento);
 	printf("danceability: %f\n", musica->danceability);
 	printf("energy: %f\n", musica->energy);
@@ -201,10 +205,14 @@ void musica_print(Musica musica)
 void musica_destroy(Musica musica)
 {
 	free(musica->id);
+	for(int i = 0; i < musica->n_artistas; i++){
+		free(musica->artists[i]);
+		free(musica->id_artists[i]);	
+	}
 	free(musica->artists);
+	free(musica->id_artists);
 	free(musica->data_lancamento);
 	free(musica->nome_da_musica);
-	free(musica->id_artists);
 	free(musica);
 }
 
@@ -222,21 +230,33 @@ int musica_salva_inteiro(char *inteiro_str)
 {
 	return atoi(inteiro_str); // converte para inteiro
 }
+char **musica_salva_artistas(char *artistas_str, int *n_artistas)
+{
+    int n_alocados = 1, n_add = 0;
+    char **artistas_lista = (char **)malloc(n_alocados * sizeof(char *));
+    char *token = artistas_str;
+    // recebe uma string de artistas e separa a cada pipeline
+    while (1)
+    {
+        // quebra o artista a cada pipeline
+        token = strsep(&artistas_str, "|");
 
-// IGNORE
-/* separa uma string a cada | em uma matriz dinamica - serve para organizar uma lista de
-artistas ou seus ids a fim de encontra-los posteriormerte para o armazenamento no struct*/
-/*char** musica_salva_artistas_str(char* artistas_str){
-	char* token = artistas_str;
-	char** artistas_out ; // alocar
-
-	for(int i=0; token != NULL; i++) {
-		strsep(&artistas_str, "|");
-		artistas_out[i] = strdup(token);
-		// realoca artistas
-		puts(token);
-		token = artistas_str;
-	}
-	return artistas_out;
+        if (token != NULL)
+        { // uma string valida
+            n_add++;
+            if (n_add == n_alocados)
+            {
+                n_alocados *= 2;
+                artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
+            }
+        }
+        else
+        {
+            // se a string acaba, o loop eh encerrado
+            break;
+        }
+        artistas_lista[n_add - 1] = strdup(token); // salva o artista na lista
+    }
+    *n_artistas = n_add;
+    return artistas_lista;
 }
-*/

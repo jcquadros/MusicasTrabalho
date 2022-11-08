@@ -3,6 +3,7 @@
 
 typedef enum type{
     MUSICA,
+    ARTISTA,
     INT,
     FLOAT,
     CHAR

@@ -32,5 +32,6 @@ void artista_destroy(Artista artista);
 char *artista_salva_string(char *string_in);
 float artista_salva_float(char *float_str);
 int artista_salva_inteiro(char *inteiro_str);
+char **artista_salva_generos(char *generos_str, int *generos_len);
 
 #endif
