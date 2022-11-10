@@ -63,39 +63,39 @@ int main(int argc, char **argv)
 
 	// PROGRAMA EM EXECUCAO
 	while(loop){
-        imprime_menu();
-        scanf("%s", linha); // leitura em string para reduzir falhas no programa por causa erros do usuario
-        seletor = atoi(linha);
-        switch (seletor)
-        {
-        case (INVALIDO):
-            printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
-            break;
-        case (BUSCAR_MUSICA):
-            break;
-        case (LISTAR_MUSICA):
-            break;
-        case (CRIAR_PLAYLIST):
-            break;
-        case (LISTAR_PLAYLISTS):
-            break;
-        case (LISTAR_UMA_PLAYLIST):
-            break;
-        case (ADICIONAR_MUSICA_PLAYLIST):
-            break;
-        case (RECOMENDAR_MUSICA):
-            break;
-        case (GERAR_RELATORIO):
-            break;
-        case (SAIR):
-            loop = FALSE; // quebra o loop
-            continue;
-        default:
-            printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
-            break;
-        }
-        tela_espera();
-    }
+		imprime_menu();
+		scanf("%s", linha); // leitura em string para reduzir falhas no programa por causa erros do usuario
+		seletor = atoi(linha);
+		switch (seletor)
+		{
+		case (INVALIDO):
+		    printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
+		    break;
+		case (BUSCAR_MUSICA):
+		    break;
+		case (LISTAR_MUSICA):
+		    break;
+		case (CRIAR_PLAYLIST):
+		    break;
+		case (LISTAR_PLAYLISTS):
+		    break;
+		case (LISTAR_UMA_PLAYLIST):
+		    break;
+		case (ADICIONAR_MUSICA_PLAYLIST):
+		    break;
+		case (RECOMENDAR_MUSICA):
+		    break;
+		case (GERAR_RELATORIO):
+		    break;
+		case (SAIR):
+		    loop = FALSE; // quebra o loop
+		    continue;
+		default:
+		    printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
+		    break;
+		}
+		tela_espera();
+    	}
 	vector_destroy(vetor_artista);
 	vector_destroy(vetor_musica);
 	return 0;
