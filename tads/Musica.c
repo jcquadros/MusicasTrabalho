@@ -88,7 +88,8 @@ size_t musica_read(FILE *file, Musica musica)
 	// leitura de uma linha por vez ate o final do arquivo
 	retorno_get = getline(&linha, &len, file);
 	if (retorno_get == EOF)
-	{
+	{	
+		free(musica);
 		free(linha);
 		return (retorno_get);
 	}
