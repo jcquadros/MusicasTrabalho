@@ -5,35 +5,44 @@
 #include <Artista.h>
 #include <Menu.h>
 Vector inicializa_artista(FILE *file_artistas){
+	printf("Entrou na funcao\n\n");
 	Vector vetor_artista = vector_create(ARTISTA);
 	size_t retorno = 1;
 	// INICIALIZA ARTISTAS
-	while (feof(file_artistas))
+	while (1)
 	{
+		
 		// cria um artista
 		Artista artista = artista_create();
 
 		// le os dados de um artista
 		retorno = artista_read(file_artistas, artista);
-		
+		if(retorno == EOF){
+			break;
+		}
 		// adiciona a musica na ultima posicao do vetor
 		vector_add(vetor_artista, artista);
+
+		
 	}
 	fclose(file_artistas);
-	rerurn vetor_artista;
+	return vetor_artista;
 }
 
-Vector inicializa_musica(FILE *file_musicas){
+Vector inicializa_musica(FILE *file_musicas, Vector vetor_artista){
 	Vector vetor_musica = vector_create(MUSICA);
 	size_t retorno = 1;
 	// INICIALIZA MUSICAS
-	while (feof(file_musicas))
+	while (!feof(file_musicas))
 	{
 		// cria uma musica
 		Musica musica = musica_create();
 
 		// le os dados de uma musica
 		retorno = musica_read(file_musicas, musica);
+		if(retorno == EOF){
+			break;
+		}
 
 		// adiciona o indice dos artistas participantes na composicao da musica
 		musica_add_idx_artistas(musica, vector_cria_lista_artistas(musica, vetor_artista));
@@ -52,8 +61,8 @@ int main(int argc, char **argv)
 	FILE *file_artistas = artista_abre_arquivo(argc, argv);
 	FILE *file_musicas = musica_abre_arquivo(argc, argv);
 	// Gravacao dos dados
-	Vector vector_artista = inicializa_artista(file_artistas);
-	Vector vetor_musica = inicializa_musica(file_musicas);
+	Vector vetor_artista = inicializa_artista(file_artistas);
+	Vector vetor_musica = inicializa_musica(file_musicas, vetor_artista);
 
 	// Variaveis da parte principal do programa
 	int seletor, loop = TRUE;

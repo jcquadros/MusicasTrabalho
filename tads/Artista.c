@@ -57,6 +57,7 @@ size_t artista_read(FILE *file, Artista artista)
     retorno_get = getline(&linha, &len, file);
     if (retorno_get == EOF)
     {
+        free(artista);
         free(linha);
         return (retorno_get);
     }
@@ -127,7 +128,7 @@ void artista_print_generos(Artista artista)
     printf("GENEROS: ");
     for (int i = 0; i < artista->n_generos; i++)
     {
-        printf("%s / ", generos[i]);
+        printf("%s  ", generos[i]);
     }
     printf("\n");
 }
