@@ -4,6 +4,7 @@
 #include <Vector.h>
 #include <Artista.h>
 #include <Menu.h>
+#include <Playlist.h>
 Vector inicializa_artista(FILE *file_artistas){
 	printf("Entrou na funcao\n\n");
 	Vector vetor_artista = vector_create(ARTISTA);
@@ -63,9 +64,11 @@ int main(int argc, char **argv)
 	// Gravacao dos dados
 	Vector vetor_artista = inicializa_artista(file_artistas);
 	Vector vetor_musica = inicializa_musica(file_musicas, vetor_artista);
+	Vector vetor_playlist = vector_create(PLAYLIST);
 
 	// Variaveis da parte principal do programa
-	int seletor, loop = TRUE;
+	Playlist playlist;
+	int seletor,idx_p, idx_m, loop = TRUE;
     	char linha[10];
 
 	// PROGRAMA EM EXECUCAO
@@ -85,12 +88,28 @@ int main(int argc, char **argv)
 		case (LISTAR_MUSICA):
 		    break;
 		case (CRIAR_PLAYLIST):
+			playlist = playlist_create();
+			vector_add(vetor_playlist, playlist);
+			printf("\nPlaylist criada com sucesso!\n");
 		    break;
 		case (LISTAR_PLAYLISTS):
+			vector_print(vetor_playlist);
 		    break;
 		case (LISTAR_UMA_PLAYLIST):
+			// to do: preciso da funcao da gabriela
+			printf("Digite o indice da playlist que deseja exibir: ");
+			scanf("%d", &idx_p);
+			playlist = vector_get(vetor_playlist, idx_p);
+			playlist_print(playlist);
 		    break;
 		case (ADICIONAR_MUSICA_PLAYLIST):
+			printf("Digite o indice da musica a ser adicionada: ");
+			scanf("%d", &idx_m);
+			printf("Digite o indice da playlist que deseja adicionar a musica selecionada: ");
+			scanf("%d", &idx_p);
+			playlist = vector_get(vetor_playlist, idx_p);
+			playlist_add(playlist, idx_m);
+
 		    break;
 		case (RECOMENDAR_MUSICA):
 		    break;
@@ -105,6 +124,7 @@ int main(int argc, char **argv)
 		}
 		tela_espera();
     	}
+	vector_destroy(vetor_playlist);
 	vector_destroy(vetor_artista);
 	vector_destroy(vetor_musica);
 	return 0;
