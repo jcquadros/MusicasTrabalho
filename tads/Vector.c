@@ -3,6 +3,7 @@
 #include "Vector.h"
 #include "Musica.h"
 #include "Artista.h"
+#include "Playlist.h"
 
 struct vector
 {
@@ -125,8 +126,25 @@ void vector_destroy(Vector v)
         {
             artista_destroy(v->data[i]);
         }
+    }else if(v->tipo == PLAYLIST){
+        // destroi playlists
+        for(int i=0; i< size; i++){
+            playlist_destroy(v->data[i]);
+        }
     }
 
     free(v->data);
     free(v);
+}
+
+void vector_print(Vector v){
+    int size = vector_size(v);
+    if(v->tipo == PLAYLIST){
+        printf(">> Exibindo playlists:\n");
+        Playlist playlist;
+        for(int i=0; i<size; i++){  
+            playlist = vector_get(v, i);
+            printf("    PLAYLIST [%d] : %s | NUMERO DE MUSICAs : %d\n", i, playlist_get_nome(playlist), playlist_get_n_musicas(playlist));
+        }
+    }
 }

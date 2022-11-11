@@ -6,6 +6,7 @@ typedef enum type
 {
     MUSICA,
     ARTISTA,
+    PLAYLIST,
     INT,
     FLOAT,
     CHAR
@@ -34,5 +35,7 @@ int *vector_cria_lista_artistas(VectorType musica, Vector artistas);
 
 // libera toda a memoria alocada em v
 void vector_destroy(Vector v);
+
+void vector_print(Vector v);
 
 #endif
