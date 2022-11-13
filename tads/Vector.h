@@ -38,4 +38,10 @@ void vector_destroy(Vector v);
 
 void vector_print(Vector v);
 
+int vector_busca_musicas(Vector vetor_musica,char *linha,int **lista_musicas);
+
+void vector_print_lista_musicas(int *lista_musicas, int  lista_tamanho, Vector vetor_musica, Vector vetor_artista);
+
+void vector_listar_musica(int idx_m, Vector vetor_musica, Vector vetor_artista);
+
 #endif
