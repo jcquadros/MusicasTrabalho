@@ -74,4 +74,10 @@ float musica_get_instrumentalness(Musica musica);
 float musica_get_liveness(Musica musica);
 float musica_get_tempo(Musica musica);
 int musica_get_time_assignature(Musica musica);
+
+//compara uma música com uma string
+int musica_compara(char *str_musica,Musica musica);
+
+//abre uma musica no spotify
+void musica_abrir_spotify(Musica musica);
 #endif
