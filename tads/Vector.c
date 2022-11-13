@@ -126,9 +126,12 @@ void vector_destroy(Vector v)
         {
             artista_destroy(v->data[i]);
         }
-    }else if(v->tipo == PLAYLIST){
+    }
+    else if (v->tipo == PLAYLIST)
+    {
         // destroi playlists
-        for(int i=0; i< size; i++){
+        for (int i = 0; i < size; i++)
+        {
             playlist_destroy(v->data[i]);
         }
     }
@@ -137,14 +140,79 @@ void vector_destroy(Vector v)
     free(v);
 }
 
-void vector_print(Vector v){
+void vector_print(Vector v)
+{
     int size = vector_size(v);
-    if(v->tipo == PLAYLIST){
+    if (v->tipo == PLAYLIST)
+    {
         printf(">> Exibindo playlists:\n");
         Playlist playlist;
-        for(int i=0; i<size; i++){  
+        for (int i = 0; i < size; i++)
+        {
             playlist = vector_get(v, i);
             printf("    PLAYLIST [%d] : %s | NUMERO DE MUSICAs : %d\n", i, playlist_get_nome(playlist), playlist_get_n_musicas(playlist));
         }
     }
+}
+// busca musicas com titulo igual, as salva em uma lista e retorna o tamanho
+int vector_busca_musicas(Vector vetor_musica, char *linha, int **lista_musicas)
+{
+    int i, musicas_add = 0, musicas_alocadas = ALOCAR;
+    Musica musica_comparada;
+    int tamanho = vector_size(vetor_musica);
+    int *musicas_iguais = (int *)malloc(musicas_alocadas * sizeof(int));
+    for (i = 0; i < tamanho; i++)
+    {
+        musica_comparada = vector_get(vetor_musica, i); // Pega uma música
+        if (musica_compara(linha, musica_comparada))
+        {
+            musicas_add++;
+            if (musicas_alocadas == musicas_add)
+            {
+                printf("realocou\n");
+                musicas_alocadas *= 2;
+                musicas_iguais = (int *)realloc(musicas_iguais, musicas_alocadas * sizeof(int));
+            }
+            musicas_iguais[musicas_add - 1] = i;
+        }
+    }
+
+    *lista_musicas = musicas_iguais; // salva a lista de musicas
+    return musicas_add; // Esse é o tamanho da lista
+}
+
+void vector_print_lista_musicas(int *lista_musicas, int  lista_tamanho, Vector vetor_musica, Vector vetor_artista){
+    // indice, id, titulo, nome_artistas 
+    Musica musica_print;
+    Artista artista;
+    int *ponteiro_artistas_lista;
+    int numero_artistas;
+    for(int i=0;i<lista_tamanho;i++){
+    musica_print = vector_get(vetor_musica,lista_musicas[i]);
+    ponteiro_artistas_lista = musica_get_indices(musica_print);
+    numero_artistas = musica_get_n_artistas(musica_print);
+    printf("[%d] : %s | ID: %s | ARTISTAS:",lista_musicas[i], musica_get_nome(musica_print), musica_get_id(musica_print));
+    for(int j=0;j<numero_artistas;j++){
+        artista = vector_get(vetor_artista,ponteiro_artistas_lista[j]);
+        printf(" [%s]", artista_get_nome(artista));
+    }
+    printf("\n");
+    }
+    free(lista_musicas);
+}
+
+void vector_listar_musica(int idx_m, Vector vetor_musica, Vector vetor_artista){
+    Musica musica = vector_get(vetor_musica,idx_m);
+    Artista artista;
+    musica_print(musica);
+    int *ponteiro_artistas_lista = musica_get_indices(musica);
+    int numero_artistas = musica_get_n_artistas(musica);
+    for(int i = 0;i<numero_artistas;i++){
+        printf("\nARTISTA: [%d]\n",i+1);
+        artista = vector_get(vetor_artista,ponteiro_artistas_lista[i]);
+        artista_print(artista);
+    }
+    printf("\n");
+
+    musica_abrir_spotify(musica);
 }
