@@ -99,10 +99,10 @@ void artista_tok(Artista artista, char *artista_str)
 // imprimir uma artista
 void artista_print(Artista artista)
 {
+    artista_print_nome(artista);
     artista_print_id(artista);
     artista_print_seguidores(artista);
     artista_print_generos(artista);
-    artista_print_nome(artista);
     artista_print_popularidade(artista);
 }
 // funcoes auxiliares de impressao individual
