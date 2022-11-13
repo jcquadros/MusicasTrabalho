@@ -176,12 +176,11 @@ void musica_tok(Musica musica, char *musica_str)
 // imprimir uma musica
 void musica_print(Musica musica)
 {
-	musica_print_id(musica);
 	musica_print_nome(musica);
+	musica_print_id(musica);
 	musica_print_popularidade(musica);
 	musica_print_duracao(musica);
 	musica_print_explict(musica);
-	musica_print_artistas(musica);
 	musica_print_data_lancamento(musica);
 	musica_print_danceability(musica);
 	musica_print_energy(musica);
@@ -414,4 +413,27 @@ Musica musica_add_idx_artistas(Musica musica, int *idx_artistas)
 {
 	musica->idx_artists = idx_artistas;
 	return musica;
+}
+
+// compara uma string com o nome de uma musica 
+int musica_compara(char *str_musica,Musica musica){
+	char *retorno;
+		retorno = strstr(musica_get_nome(musica),str_musica);
+		if(retorno != NULL){
+			return 1;
+		}else{
+			return 0;
+		}
+}
+
+void musica_abrir_spotify(Musica musica){
+	char escolha;
+    printf("Abrir música no spotify ? [s/n] ");
+    scanf("%*c%c",&escolha);
+
+    if(escolha == 's'){
+		char link[300];
+		sprintf(link,"start https://open.spotify.com/track/%s",musica_get_id(musica));
+        system(link);
+    }
 }
