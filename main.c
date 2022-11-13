@@ -5,32 +5,33 @@
 #include <Artista.h>
 #include <Menu.h>
 #include <Playlist.h>
-Vector inicializa_artista(FILE *file_artistas){
+Vector inicializa_artista(FILE *file_artistas)
+{
 	printf("Entrou na funcao\n\n");
 	Vector vetor_artista = vector_create(ARTISTA);
 	size_t retorno = 1;
 	// INICIALIZA ARTISTAS
 	while (1)
 	{
-		
+
 		// cria um artista
 		Artista artista = artista_create();
 
 		// le os dados de um artista
 		retorno = artista_read(file_artistas, artista);
-		if(retorno == EOF){
+		if (retorno == EOF)
+		{
 			break;
 		}
 		// adiciona a musica na ultima posicao do vetor
 		vector_add(vetor_artista, artista);
-
-		
 	}
 	fclose(file_artistas);
 	return vetor_artista;
 }
 
-Vector inicializa_musica(FILE *file_musicas, Vector vetor_artista){
+Vector inicializa_musica(FILE *file_musicas, Vector vetor_artista)
+{
 	Vector vetor_musica = vector_create(MUSICA);
 	size_t retorno = 1;
 	// INICIALIZA MUSICAS
@@ -41,7 +42,8 @@ Vector inicializa_musica(FILE *file_musicas, Vector vetor_artista){
 
 		// le os dados de uma musica
 		retorno = musica_read(file_musicas, musica);
-		if(retorno == EOF){
+		if (retorno == EOF)
+		{
 			break;
 		}
 
@@ -53,7 +55,6 @@ Vector inicializa_musica(FILE *file_musicas, Vector vetor_artista){
 	}
 	fclose(file_musicas);
 	return vetor_musica;
-
 }
 
 int main(int argc, char **argv)
@@ -63,45 +64,58 @@ int main(int argc, char **argv)
 	FILE *file_musicas = musica_abre_arquivo(argc, argv);
 	// Gravacao dos dados
 	Vector vetor_artista = inicializa_artista(file_artistas);
+	printf("saiu");
 	Vector vetor_musica = inicializa_musica(file_musicas, vetor_artista);
+	printf("saiu");
 	Vector vetor_playlist = vector_create(PLAYLIST);
+	printf("saiu");
 
 	// Variaveis da parte principal do programa
 	Playlist playlist;
-	int seletor,idx_p, idx_m, loop = TRUE;
-    	char linha[10];
+	int seletor, idx_p, idx_m, loop = TRUE, lista_tamanho;
+	char linha[100];
+	int *lista_musicas = NULL;
 
 	// PROGRAMA EM EXECUCAO
-	while(loop){
+	while (loop)
+	{
 		imprime_menu();
 		scanf("%s", linha); // leitura em string para reduzir falhas no programa por causa erros do usuario
 		seletor = atoi(linha);
 		switch (seletor)
 		{
 		case (INVALIDO):
-		    printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
-		    break;
+			printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
+			break;
 		case (BUSCAR_MUSICA):
-				// escaneia a musica
-				// chama uma funcao
-		    break;
+			printf("Digite o nome da musica: ");
+			scanf("%s%*c", linha);
+			lista_tamanho = vector_busca_musicas(vetor_musica, linha, &lista_musicas);
+			vector_print_lista_musicas(lista_musicas, lista_tamanho, vetor_musica, vetor_artista);
+			// escaneia a musica
+			// chama uma funcao
+			break;
 		case (LISTAR_MUSICA):
-		    break;
+			printf("Digite o índice da música: ");
+			scanf("%d", &idx_m);
+			vector_listar_musica(idx_m, vetor_musica, vetor_artista);
+			// listar musica
+			break;
 		case (CRIAR_PLAYLIST):
 			playlist = playlist_create();
 			vector_add(vetor_playlist, playlist);
 			printf("\nPlaylist criada com sucesso!\n");
-		    break;
+			break;
 		case (LISTAR_PLAYLISTS):
 			vector_print(vetor_playlist);
-		    break;
+			break;
 		case (LISTAR_UMA_PLAYLIST):
 			// to do: preciso da funcao da gabriela
 			printf("Digite o indice da playlist que deseja exibir: ");
 			scanf("%d", &idx_p);
 			playlist = vector_get(vetor_playlist, idx_p);
 			playlist_print(playlist);
-		    break;
+			break;
 		case (ADICIONAR_MUSICA_PLAYLIST):
 			printf("Digite o indice da musica a ser adicionada: ");
 			scanf("%d", &idx_m);
@@ -110,20 +124,20 @@ int main(int argc, char **argv)
 			playlist = vector_get(vetor_playlist, idx_p);
 			playlist_add(playlist, idx_m);
 
-		    break;
+			break;
 		case (RECOMENDAR_MUSICA):
-		    break;
+			break;
 		case (GERAR_RELATORIO):
-		    break;
+			break;
 		case (SAIR):
-		    loop = FALSE; // quebra o loop
-		    continue;
+			loop = FALSE; // quebra o loop
+			continue;
 		default:
-		    printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
-		    break;
+			printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
+			break;
 		}
 		tela_espera();
-    	}
+	}
 	vector_destroy(vetor_playlist);
 	vector_destroy(vetor_artista);
 	vector_destroy(vetor_musica);
