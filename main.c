@@ -123,7 +123,7 @@ int main(int argc, char **argv)
 		case (GERAR_RELATORIO):
 			break;
 		case (SAIR):
-			printf("SAINDO..."\n);
+			printf("SAINDO...\n");
 			loop = FALSE; // quebra o loop
 			continue;
 		default:

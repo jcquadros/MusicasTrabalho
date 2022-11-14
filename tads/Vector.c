@@ -216,3 +216,7 @@ void vector_listar_musica(int idx_m, Vector vetor_musica, Vector vetor_artista){
 
     musica_abrir_spotify(musica);
 }
+
+// int *vector_get_idx_playlists(Vector vetor_playlist){
+
+// }
