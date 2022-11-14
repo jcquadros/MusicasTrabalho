@@ -5,21 +5,20 @@
 #include <Artista.h>
 #include <Menu.h>
 #include <Playlist.h>
+
 Vector inicializa_artista(FILE *file_artistas)
 {
-	printf("Entrou na funcao\n\n");
 	Vector vetor_artista = vector_create(ARTISTA);
 	size_t retorno = 1;
 	// INICIALIZA ARTISTAS
 	while (1)
 	{
-
 		// cria um artista
 		Artista artista = artista_create();
 
 		// le os dados de um artista
 		retorno = artista_read(file_artistas, artista);
-		if (retorno == EOF)
+		if (retorno == EOF) // encerra a funcao ao chegar ao fim do arquivo
 		{
 			break;
 		}
@@ -35,14 +34,14 @@ Vector inicializa_musica(FILE *file_musicas, Vector vetor_artista)
 	Vector vetor_musica = vector_create(MUSICA);
 	size_t retorno = 1;
 	// INICIALIZA MUSICAS
-	while (!feof(file_musicas))
+	while (1)
 	{
 		// cria uma musica
 		Musica musica = musica_create();
 
 		// le os dados de uma musica
 		retorno = musica_read(file_musicas, musica);
-		if (retorno == EOF)
+		if (retorno == EOF) // encerra a funcao ao chegar ao fim do arquivo
 		{
 			break;
 		}
@@ -64,46 +63,41 @@ int main(int argc, char **argv)
 	FILE *file_musicas = musica_abre_arquivo(argc, argv);
 	// Gravacao dos dados
 	Vector vetor_artista = inicializa_artista(file_artistas);
-	printf("saiu");
 	Vector vetor_musica = inicializa_musica(file_musicas, vetor_artista);
-	printf("saiu");
 	Vector vetor_playlist = vector_create(PLAYLIST);
-	printf("saiu");
 
-	// Variaveis da parte principal do programa
+	// Inicializacao de variaveis
 	Playlist playlist;
-	int seletor, idx_p, idx_m, loop = TRUE, lista_tamanho;
+	int seletor, idx_p, idx_m, loop = TRUE, lista_tamanho, *lista_musicas = NULL;
 	char linha[100];
-	int *lista_musicas = NULL;
 
 	// PROGRAMA EM EXECUCAO
 	while (loop)
 	{
 		imprime_menu();
-		scanf("%s", linha); // leitura em string para reduzir falhas no programa por causa erros do usuario
+		scanf("%s", linha); // uma forma de evitar que o programa quebre por causa de um erro do usuario
 		seletor = atoi(linha);
-		switch (seletor)
+		
+		// Funcionalidades
+		switch (seletor) 
 		{
 		case (INVALIDO):
 			printf("Opcao invalida! Por favor digite novamente sua escolha!\n");
 			break;
 		case (BUSCAR_MUSICA):
-			printf("Digite o nome da musica: ");
+			printf("Busque por uma musica :");
 			scanf("%s%*c", linha);
-			lista_tamanho = vector_busca_musicas(vetor_musica, linha, &lista_musicas);
-			vector_print_lista_musicas(lista_musicas, lista_tamanho, vetor_musica, vetor_artista);
-			// escaneia a musica
-			// chama uma funcao
+			lista_tamanho = vector_busca_musicas(vetor_musica, linha, &lista_musicas); // encontra os indices das musicas 
+			vector_print_lista_musicas(lista_musicas, lista_tamanho, vetor_musica, vetor_artista); // imprime a lista de musicas
 			break;
 		case (LISTAR_MUSICA):
-			printf("Digite o índice da música: ");
+			printf("Digite o índice da música a ser listada: ");
 			scanf("%d", &idx_m);
-			vector_listar_musica(idx_m, vetor_musica, vetor_artista);
-			// listar musica
+			vector_listar_musica(idx_m, vetor_musica, vetor_artista); // lista todos os atributos da musica e dos artistas que a compoe
 			break;
 		case (CRIAR_PLAYLIST):
-			playlist = playlist_create();
-			vector_add(vetor_playlist, playlist);
+			playlist = playlist_create(); // cria uma playlist
+			vector_add(vetor_playlist, playlist); // salva a playlist no vetor de playlists
 			printf("\nPlaylist criada com sucesso!\n");
 			break;
 		case (LISTAR_PLAYLISTS):
@@ -121,15 +115,15 @@ int main(int argc, char **argv)
 			scanf("%d", &idx_m);
 			printf("Digite o indice da playlist que deseja adicionar a musica selecionada: ");
 			scanf("%d", &idx_p);
-			playlist = vector_get(vetor_playlist, idx_p);
-			playlist_add(playlist, idx_m);
-
+			playlist = vector_get(vetor_playlist, idx_p); // recupera a playlist que sera alterada
+			playlist_add(playlist, idx_m); // adiciona a musica/altera a playlist
 			break;
 		case (RECOMENDAR_MUSICA):
 			break;
 		case (GERAR_RELATORIO):
 			break;
 		case (SAIR):
+			printf("SAINDO..."\n);
 			loop = FALSE; // quebra o loop
 			continue;
 		default:
