@@ -28,7 +28,6 @@ void musica_tok(Musica musica, char *musica_str);
 void musica_print(Musica musica);
 
 void musica_print_artistas(Musica musica);
-
 // desaloca musica
 void musica_destroy(Musica musica);
 
