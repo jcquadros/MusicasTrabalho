@@ -1,5 +1,5 @@
 #include "Musica.h"
-
+#include <ctype.h>
 enum
 {
 	ID,
@@ -7,8 +7,8 @@ enum
 	POPULARITY,
 	DURACAO_MS,
 	EXPLICT,
-	ARTISTS,
-	ID_ARTISTS,
+	ARTISTAS,
+	ID_ARTISTAS,
 	DATA_LANCAMENTO,
 	DANCEABILITY,
 	ENERGY,
@@ -29,28 +29,15 @@ struct musica
 {
 	char *id;
 	char *nome_da_musica;
-	int popularity;
-	int duracao_ms;
-	int explict;
-	int n_artistas;
-	char **artists;
-	char **id_artists;
-	int *idx_artists;
+	int popularity, duracao_ms, explict, n_artistas, key, mode, time_assignature;
+	char **artistas;
+	char **id_artistas;
+	int *idx_artistas;
 	char *data_lancamento;
-	float danceability;
-	float energy; //
-	int key;
-	float loundness;
-	int mode;				//
-	float speechiness;		//
-	float acousticness;		//
-	float instrumentalness; //
-	float liveness;			//
-	float valence;			//
-	float tempo;
-	int time_assignature;
+	float danceability, energy, loundness, speechiness, acousticness,
+		instrumentalness, liveness, valence, tempo;
 };
-
+// abre o arquivo de musica.csv 
 FILE *musica_abre_arquivo(int argc, char **argv)
 {
 	char dir[100] = "data/tracks_2.csv";
@@ -85,28 +72,24 @@ size_t musica_read(FILE *file, Musica musica)
 {
 	char *linha = NULL;
 	size_t len = 0, retorno_get;
-	// leitura de uma linha por vez ate o final do arquivo
-	retorno_get = getline(&linha, &len, file);
+	retorno_get = getline(&linha, &len, file); // le uma linha
 	if (retorno_get == EOF)
-	{	
+	{
 		free(musica);
 		free(linha);
 		return (retorno_get);
 	}
-	// printf("linha: %s", linha);
-	musica_tok(musica, linha); // quebra a string lida e salva no TAD Musica
+	musica_tok(musica, linha); // separa a string linha e salva os dados da musica
 	free(linha);
 	return retorno_get;
 }
 
-// separar as musicas
+// separa os atributos e os armazena em uma musica
 void musica_tok(Musica musica, char *musica_str)
 {
-	char *token = NULL;
-	for (int seletor = 0; seletor < QTD_ATRIBUTOS_MUSICA; seletor++)
+	char *token = strsep(&musica_str, ";");
+	for (int seletor = 0; token!=NULL; seletor++)
 	{
-		token = strsep(&musica_str, ";");
-		// printf("i: %d token: %s\n",seletor, token);
 		switch (seletor)
 		{
 		case (ID):
@@ -124,11 +107,11 @@ void musica_tok(Musica musica, char *musica_str)
 		case (EXPLICT):
 			musica->explict = musica_salva_inteiro(token);
 			break;
-		case (ARTISTS):
-			musica->artists = musica_salva_artistas(token, &musica->n_artistas);
+		case (ARTISTAS):
+			musica->artistas = musica_salva_artistas(token, &musica->n_artistas);
 			break;
-		case (ID_ARTISTS):
-			musica->id_artists = musica_salva_artistas(token, &musica->n_artistas);
+		case (ID_ARTISTAS):
+			musica->id_artistas = musica_salva_artistas(token, &musica->n_artistas);
 			break;
 		case (DATA_LANCAMENTO):
 			musica->data_lancamento = musica_salva_string(token);
@@ -170,121 +153,29 @@ void musica_tok(Musica musica, char *musica_str)
 			musica->time_assignature = musica_salva_inteiro(token);
 			break;
 		}
+		token = strsep(&musica_str, ";");
 	}
 }
 
 // imprimir uma musica
 void musica_print(Musica musica)
 {
-	musica_print_nome(musica);
-	musica_print_id(musica);
-	musica_print_popularidade(musica);
-	musica_print_duracao(musica);
-	musica_print_explict(musica);
-	musica_print_data_lancamento(musica);
-	musica_print_danceability(musica);
-	musica_print_energy(musica);
-	musica_print_key(musica);
-	musica_print_loundness(musica);
-	musica_print_mode(musica);
-	musica_print_spechiness(musica);
-	musica_print_instrumentalness(musica);
-	musica_print_liveness(musica);
-	musica_print_tempo(musica);
-	musica_print_time_assignarure(musica);
-}
-
-// imprime cada atributo da musica de forma individual
-void musica_print_id(Musica musica)
-{
+	printf("NOME: %s\n", musica_get_nome(musica)); 
 	printf("ID: %s\n", musica_get_id(musica));
-}
-void musica_print_nome(Musica musica)
-{
-	printf("NOME: %s\n", musica_get_nome(musica));
-}
-void musica_print_popularidade(Musica musica)
-{
 	printf("POPULARIDADE: %d\n", musica_get_popularidade(musica));
-}
-void musica_print_duracao(Musica musica)
-{
 	printf("DURACAO MS: %d\n", musica_get_duracao(musica));
-}
-void musica_print_explict(Musica musica)
-{
 	printf("EXPLICT: %d\n", musica_get_explict(musica));
-}
-void musica_print_artistas(Musica musica)
-{
-	int *indice_artistas = musica_get_indices(musica);
-	printf("ARTISTAS: ");
-	for (int i = 0; i < musica->n_artistas; i++)
-	{
-		printf("[%d] ", indice_artistas[i]);
-	}
-	printf("\n");
-}
-void musica_print_data_lancamento(Musica musica)
-{
 	printf("DATA DE LANCAMENTO: %s\n", musica_get_data_lancamento(musica));
-}
-void musica_print_danceability(Musica musica)
-{
 	printf("DANCEABILITY: %.2f\n", musica_get_danceability(musica));
-}
-void musica_print_energy(Musica musica)
-{
 	printf("ENERGY: %.2f\n", musica_get_energy(musica));
-}
-void musica_print_key(Musica musica)
-{
 	printf("KEY: %d\n", musica_get_key(musica));
-}
-void musica_print_loundness(Musica musica)
-{
 	printf("LOUNDNESS: %.2f\n", musica_get_loundness(musica));
-}
-void musica_print_mode(Musica musica)
-{
 	printf("MODE: %d\n", musica_get_mode(musica));
-}
-void musica_print_spechiness(Musica musica)
-{
 	printf("SPECHINESS: %.2f\n", musica_get_spechiness(musica));
-}
-void musica_print_instrumentalness(Musica musica)
-{
 	printf("INSTRUMENTALNESS: %.2f\n", musica_get_instrumentalness(musica));
-}
-void musica_print_liveness(Musica musica)
-{
 	printf("LIVENESS: %.2f\n", musica_get_liveness(musica));
-}
-void musica_print_tempo(Musica musica)
-{
 	printf("TEMPO: %.2f\n", musica_get_tempo(musica));
-}
-void musica_print_time_assignarure(Musica musica)
-{
 	printf("TIME ASSIGNATURE: %d\n", musica_get_time_assignature(musica));
-}
-
-// desaloca uma musica
-void musica_destroy(Musica musica)
-{
-	free(musica->id);
-	for (int i = 0; i < musica->n_artistas; i++)
-	{
-		free(musica->artists[i]);
-		free(musica->id_artists[i]);
-	}
-	free(musica->artists);
-	free(musica->id_artists);
-	free(musica->idx_artists);
-	free(musica->data_lancamento);
-	free(musica->nome_da_musica);
-	free(musica);
 }
 
 /*Insercao de informacoes no struct*/
@@ -301,35 +192,32 @@ int musica_salva_inteiro(char *inteiro_str)
 {
 	return atoi(inteiro_str); // converte para inteiro
 }
+
+// separa novamente a string de artistas a cada pipeline e salva seus valores
 char **musica_salva_artistas(char *artistas_str, int *n_artistas)
 {
-	int n_alocados = 1, n_add = 0;
+	int n_alocados = ALOCAR, n_add = 0;
 	char **artistas_lista = (char **)malloc(n_alocados * sizeof(char *));
-	char *token = artistas_str;
+	char *token = strsep(&artistas_str, "|");
 	// recebe uma string de artistas e separa a cada pipeline
-	while (1)
+	for (n_add = 0; token != NULL; n_add++)
 	{
-		// quebra o artista a cada pipeline
-		token = strsep(&artistas_str, "|");
-
-		if (token != NULL)
-		{ // uma string valida
-			n_add++;
-			if (n_add == n_alocados)
-			{
-				n_alocados *= 2;
-				artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
-			}
-		}
-		else
+		if (n_add == n_alocados)
 		{
-			// se a string acaba, o loop eh encerrado
-			break;
+			n_alocados *= 2;
+			artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
 		}
-		artistas_lista[n_add - 1] = strdup(token); // salva o artista na lista
+		artistas_lista[n_add] = strdup(token); // salva o artista na lista
+		token = strsep(&artistas_str, "|");
 	}
-	*n_artistas = n_add;
+	*n_artistas = n_add; // resgata o numero de artistas
 	return artistas_lista;
+}
+
+Musica musica_add_idx_artistas(Musica musica, int *idx_artistas)
+{
+	musica->idx_artistas = idx_artistas; // salva os indices dos artistas
+	return musica;
 }
 
 // recupera atributos de musica de orma individual
@@ -351,7 +239,7 @@ int musica_get_explict(Musica musica)
 }
 int *musica_get_indices(Musica musica)
 {
-	return musica->idx_artists;
+	return musica->idx_artistas;
 }
 char *musica_get_data_lancamento(Musica musica)
 {
@@ -395,45 +283,81 @@ float musica_get_tempo(Musica musica)
 }
 int musica_get_time_assignature(Musica musica)
 {
-	return musica->time_assignature;
+	return musica->time_assignature; 
 }
 char *musica_get_id(Musica musica)
 {
-	return musica->id;
+	return musica->id; // recupera o id da musica
 }
 char **musica_get_lista_artistas(Musica musica)
 {
-	return musica->id_artists;
+	return musica->id_artistas; // recupera a lista de id dos artistas
 }
 int musica_get_n_artistas(Musica musica)
 {
-	return musica->n_artistas;
+	return musica->n_artistas; // recupera a quantidade de artistas da lista
 }
-Musica musica_add_idx_artistas(Musica musica, int *idx_artistas)
+
+
+/*FUNCIONALIDADE BUSCAR MUSICA*/
+// compara uma string com o nome de uma musica
+int musica_compara(char *str_musica, Musica musica)
 {
-	musica->idx_artists = idx_artistas;
-	return musica;
-}
+	char *retorno, *musica_comparada = strdup(musica_get_nome(musica));
 
-// compara uma string com o nome de uma musica 
-int musica_compara(char *str_musica,Musica musica){
-	char *retorno;
-		retorno = strstr(musica_get_nome(musica),str_musica);
-		if(retorno != NULL){
-			return 1;
-		}else{
-			return 0;
-		}
-}
+	// transforma ambas as strings em minusculo
+	musica_comparada = musica_transforma_minusculo(musica_comparada);
+	str_musica = musica_transforma_minusculo(str_musica);
+	retorno = strstr(musica_comparada, str_musica); // compara
+	free(musica_comparada);
 
-void musica_abrir_spotify(Musica musica){
+	if (retorno != NULL)
+	{
+		return 1; // encontrou semelhanca
+	}
+	else
+	{
+		return 0; // nao encontrou semelhanca
+	}
+}
+// transforma todos os caracteres de uma string em minusculo
+char *musica_transforma_minusculo(char *str)
+{
+	for (int i = 0; str[i]; i++)
+	{
+		str[i] = tolower(str[i]);
+	}
+	return str;
+}
+// faz uma chamada de abertura do firefox 
+void musica_abrir_spotify(Musica musica)
+{
 	char escolha;
-    printf("Abrir música no spotify ? [s/n] ");
-    scanf("%*c%c",&escolha);
+	printf("Abrir música no spotify ? [s/n] ");
+	scanf("%*c%c", &escolha);
 
-    if(escolha == 's'){
+	if (escolha == 's')
+	{
 		char link[300];
-		sprintf(link,"start https://open.spotify.com/track/%s",musica_get_id(musica));
-        system(link);
-    }
+		sprintf(link, "firefox https://open.spotify.com/track/%s", musica_get_id(musica));
+		system(link);
+	}
+}
+
+
+// desaloca uma musica
+void musica_destroy(Musica musica)
+{
+	free(musica->id);
+	for (int i = 0; i < musica->n_artistas; i++)
+	{
+		free(musica->artistas[i]);
+		free(musica->id_artistas[i]);
+	}
+	free(musica->artistas);
+	free(musica->id_artistas);
+	free(musica->idx_artistas);
+	free(musica->data_lancamento);
+	free(musica->nome_da_musica);
+	free(musica);
 }

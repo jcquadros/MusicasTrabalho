@@ -68,12 +68,9 @@ size_t artista_read(FILE *file, Artista artista)
 // separar as informacoes do artista em tokens e armazena em artista
 void artista_tok(Artista artista, char *artista_str)
 {
-    char *token = NULL;
-    int len = 0;
-    for (int seletor = 0; seletor < QTD_ATRIBUTOS_ARTISTA; seletor++)
+    char *token = strsep(&artista_str, ";");
+    for (int seletor = 0; token != NULL; seletor++)
     {
-        token = strsep(&artista_str, ";");
-
         switch (seletor)
         {
         case (ID):
@@ -93,6 +90,7 @@ void artista_tok(Artista artista, char *artista_str)
             artista->popularidade = artista_salva_inteiro(token);
             break;
         }
+        token = strsep(&artista_str, ";");
     }
 }
 
@@ -156,43 +154,20 @@ char **artista_salva_generos(char *generos_str, int *generos_len)
 
     int n_alocados = 1, n_add = 0;
     char **generos_lista = (char **)malloc(n_alocados * sizeof(char *));
-    char *token = generos_str;
+    char *token = strsep(&generos_str, "|");
     // recebe uma string de generos e separa a cada pipeline
-    while (1)
+    for (n_add = 0; token != NULL; n_add++)
     {
-        // quebra o genero a cada pipeline
-        token = strsep(&generos_str, "|");
-
-        if (token != NULL)
-        { // uma string valida
-            n_add++;
-            if (n_add == n_alocados)
-            {
-                n_alocados *= 2;
-                generos_lista = realloc(generos_lista, sizeof(char *) * n_alocados);
-            }
-        }
-        else
+        if (n_add == n_alocados)
         {
-            // se a string acaba, o loop eh encerrado
-            break;
+            n_alocados *= 2;
+            generos_lista = realloc(generos_lista, sizeof(char *) * n_alocados);
         }
-        generos_lista[n_add - 1] = strdup(token); // salva o genero na lista
+        generos_lista[n_add] = strdup(token); // salva o genero na lista
+        token = strsep(&generos_str, "|");
     }
     *generos_len = n_add;
     return generos_lista;
-}
-// desaloca artista
-void artista_destroy(Artista artista)
-{
-    free(artista->id);
-    for (int i = 0; i < artista->n_generos; i++)
-    {
-        free(artista->generos[i]);
-    }
-    free(artista->generos);
-    free(artista->nome_do_artista);
-    free(artista);
 }
 
 char *artista_get_id(Artista artista)
@@ -218,4 +193,17 @@ char *artista_get_nome(Artista artista)
 int artista_get_popularidade(Artista artista)
 {
     return artista->popularidade; // recupera a popularidade
+}
+
+// desaloca artista
+void artista_destroy(Artista artista)
+{
+    free(artista->id);
+    for (int i = 0; i < artista->n_generos; i++)
+    {
+        free(artista->generos[i]);
+    }
+    free(artista->generos);
+    free(artista->nome_do_artista);
+    free(artista);
 }
