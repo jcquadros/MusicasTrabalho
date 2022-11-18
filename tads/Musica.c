@@ -1,5 +1,5 @@
 #include "Musica.h"
-
+#include <ctype.h>
 enum
 {
 	ID,
@@ -176,45 +176,25 @@ void musica_tok(Musica musica, char *musica_str)
 // imprimir uma musica
 void musica_print(Musica musica)
 {
-	musica_print_nome(musica);
-	musica_print_id(musica);
-	musica_print_popularidade(musica);
-	musica_print_duracao(musica);
-	musica_print_explict(musica);
-	musica_print_data_lancamento(musica);
-	musica_print_danceability(musica);
-	musica_print_energy(musica);
-	musica_print_key(musica);
-	musica_print_loundness(musica);
-	musica_print_mode(musica);
-	musica_print_spechiness(musica);
-	musica_print_instrumentalness(musica);
-	musica_print_liveness(musica);
-	musica_print_tempo(musica);
-	musica_print_time_assignarure(musica);
+	printf("NOME: %s\n", musica_get_nome(musica));
+	printf("ID: %s\n", musica_get_id(musica));
+	printf("POPULARIDADE: %d\n", musica_get_popularidade(musica));
+	printf("DURACAO MS: %d\n", musica_get_duracao(musica));
+	printf("EXPLICT: %d\n", musica_get_explict(musica));
+	printf("DATA DE LANCAMENTO: %s\n", musica_get_data_lancamento(musica));
+	printf("DANCEABILITY: %.2f\n", musica_get_danceability(musica));
+	printf("ENERGY: %.2f\n", musica_get_energy(musica));
+	printf("KEY: %d\n", musica_get_key(musica));
+	printf("LOUNDNESS: %.2f\n", musica_get_loundness(musica));
+	printf("MODE: %d\n", musica_get_mode(musica));
+	printf("SPECHINESS: %.2f\n", musica_get_spechiness(musica));
+	printf("INSTRUMENTALNESS: %.2f\n", musica_get_instrumentalness(musica));
+	printf("LIVENESS: %.2f\n", musica_get_liveness(musica));
+	printf("TEMPO: %.2f\n", musica_get_tempo(musica));
+	printf("TIME ASSIGNATURE: %d\n", musica_get_time_assignature(musica));
 }
 
-// imprime cada atributo da musica de forma individual
-void musica_print_id(Musica musica)
-{
-	printf("ID: %s\n", musica_get_id(musica));
-}
-void musica_print_nome(Musica musica)
-{
-	printf("NOME: %s\n", musica_get_nome(musica));
-}
-void musica_print_popularidade(Musica musica)
-{
-	printf("POPULARIDADE: %d\n", musica_get_popularidade(musica));
-}
-void musica_print_duracao(Musica musica)
-{
-	printf("DURACAO MS: %d\n", musica_get_duracao(musica));
-}
-void musica_print_explict(Musica musica)
-{
-	printf("EXPLICT: %d\n", musica_get_explict(musica));
-}
+
 void musica_print_artistas(Musica musica)
 {
 	int *indice_artistas = musica_get_indices(musica);
@@ -224,50 +204,6 @@ void musica_print_artistas(Musica musica)
 		printf("[%d] ", indice_artistas[i]);
 	}
 	printf("\n");
-}
-void musica_print_data_lancamento(Musica musica)
-{
-	printf("DATA DE LANCAMENTO: %s\n", musica_get_data_lancamento(musica));
-}
-void musica_print_danceability(Musica musica)
-{
-	printf("DANCEABILITY: %.2f\n", musica_get_danceability(musica));
-}
-void musica_print_energy(Musica musica)
-{
-	printf("ENERGY: %.2f\n", musica_get_energy(musica));
-}
-void musica_print_key(Musica musica)
-{
-	printf("KEY: %d\n", musica_get_key(musica));
-}
-void musica_print_loundness(Musica musica)
-{
-	printf("LOUNDNESS: %.2f\n", musica_get_loundness(musica));
-}
-void musica_print_mode(Musica musica)
-{
-	printf("MODE: %d\n", musica_get_mode(musica));
-}
-void musica_print_spechiness(Musica musica)
-{
-	printf("SPECHINESS: %.2f\n", musica_get_spechiness(musica));
-}
-void musica_print_instrumentalness(Musica musica)
-{
-	printf("INSTRUMENTALNESS: %.2f\n", musica_get_instrumentalness(musica));
-}
-void musica_print_liveness(Musica musica)
-{
-	printf("LIVENESS: %.2f\n", musica_get_liveness(musica));
-}
-void musica_print_tempo(Musica musica)
-{
-	printf("TEMPO: %.2f\n", musica_get_tempo(musica));
-}
-void musica_print_time_assignarure(Musica musica)
-{
-	printf("TIME ASSIGNATURE: %d\n", musica_get_time_assignature(musica));
 }
 
 // desaloca uma musica
@@ -415,25 +351,45 @@ Musica musica_add_idx_artistas(Musica musica, int *idx_artistas)
 	return musica;
 }
 
-// compara uma string com o nome de uma musica 
-int musica_compara(char *str_musica,Musica musica){
-	char *retorno;
-		retorno = strstr(musica_get_nome(musica),str_musica);
-		if(retorno != NULL){
-			return 1;
-		}else{
-			return 0;
-		}
+/*FUNCIONALIDADE BUSCAR MUSICA*/
+// compara uma string com o nome de uma musica
+int musica_compara(char *str_musica, Musica musica)
+{
+	char *retorno, *musica_comparada = strdup(musica_get_nome(musica));
+
+	// transforma ambas as strings em minusculo
+	musica_comparada = musica_transforma_minusculo(musica_comparada);
+	str_musica = musica_transforma_minusculo(str_musica);
+	retorno = strstr(musica_comparada, str_musica); // compara
+	free(musica_comparada);
+
+	if (retorno != NULL)
+	{
+		return 1; // encontrou semelhanca
+	}
+	else
+	{
+		return 0; // nao encontrou semelhanca
+	}
+}
+// transforma todos os caracteres de uma string em minusculo
+char *musica_transforma_minusculo(char *str)
+{
+	for (int i = 0; str[i]; i++)
+	{
+		str[i] = tolower(str[i]);
+	}
+	return str;
 }
 
 void musica_abrir_spotify(Musica musica){
 	char escolha;
-    printf("Abrir música no spotify ? [s/n] ");
+    printf("Abrir música no spotify ? [s] ");
     scanf("%*c%c",&escolha);
 
     if(escolha == 's'){
 		char link[300];
-		sprintf(link,"start https://open.spotify.com/track/%s",musica_get_id(musica));
+		sprintf(link,"firefox https://open.spotify.com/track/%s",musica_get_id(musica));
         system(link);
     }
 }

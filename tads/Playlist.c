@@ -38,6 +38,9 @@ char* playlist_get_nome(Playlist playlist){
 int playlist_get_n_musicas(Playlist playlist){
     return playlist->n_add;
 }
+int playlist_get_musica(Playlist playlist, int idx){
+	return playlist->musicas[idx];
+}
 void playlist_print(Playlist playlist)
 {
     printf("NOME: %s\n", playlist->nome);

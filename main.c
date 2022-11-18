@@ -107,8 +107,7 @@ int main(int argc, char **argv)
 			// to do: preciso da funcao da gabriela
 			printf("Digite o indice da playlist que deseja exibir: ");
 			scanf("%d", &idx_p);
-			playlist = vector_get(vetor_playlist, idx_p);
-			playlist_print(playlist);
+			vector_listar_playlist(idx_p, vetor_musica, vetor_playlist);
 			break;
 		case (ADICIONAR_MUSICA_PLAYLIST):
 			printf("Digite o indice da musica a ser adicionada: ");
