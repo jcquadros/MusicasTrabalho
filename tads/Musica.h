@@ -35,9 +35,8 @@ void musica_destroy(Musica musica);
 char *musica_salva_string(char *string_in);
 float musica_salva_float(char *float_str);
 int musica_salva_inteiro(char *inteiro_str);
-char **musica_salva_artistas(char *artistas_str, int *n_artistas);
+char **musica_salva_artistas(char *artistas_str, int *artistas_len);
 char *musica_get_id(Musica musica);
-Musica musica_add_idx_artistas(Musica musica, int *idx_artistas);
 // funcao auxiliar para recuperacao dos valores a seguir
 char **musica_get_lista_artistas(Musica musica);
 int musica_get_n_artistas(Musica musica);
@@ -45,7 +44,6 @@ char *musica_get_nome(Musica musica);
 int musica_get_popularidade(Musica musica);
 int musica_get_duracao(Musica musica);
 int musica_get_explict(Musica musica);
-int *musica_get_indices(Musica musica);
 char *musica_get_data_lancamento(Musica musica);
 float musica_get_danceability(Musica musica);
 float musica_get_energy(Musica musica);
@@ -57,7 +55,7 @@ float musica_get_instrumentalness(Musica musica);
 float musica_get_liveness(Musica musica);
 float musica_get_tempo(Musica musica);
 int musica_get_time_assignature(Musica musica);
-
+char* musica_get_nome_artista(Musica musica, int idx);
 //compara uma música com uma string
 int musica_compara(char *str_musica,Musica musica);
 char *musica_transforma_minusculo(char *str);

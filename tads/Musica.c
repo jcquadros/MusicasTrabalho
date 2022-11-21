@@ -33,9 +33,9 @@ struct musica
 	int duracao_ms;
 	int explict;
 	int n_artistas;
+	int n_id_artistas;
 	char **artists;
 	char **id_artists;
-	int *idx_artists;
 	char *data_lancamento;
 	float danceability;
 	float energy; //
@@ -53,7 +53,7 @@ struct musica
 
 FILE *musica_abre_arquivo(int argc, char **argv)
 {
-	char dir[100] = "data/tracks_2.csv";
+	char dir[100] = "data/tracks_full.csv";
 	// verifica se o diretorio foi informado como argumento
 	// if (argc > 1)
 	// {
@@ -72,6 +72,12 @@ FILE *musica_abre_arquivo(int argc, char **argv)
 		printf("O diretorio de musica'%s' nao existe!\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
+	char *linha = NULL;
+	size_t len = 0, retorno_get;
+	// leitura de uma linha por vez ate o final do arquivo
+	retorno_get = getline(&linha, &len, file);
+	printf("%s\n", linha);
+	free(linha);
 
 	return file;
 }
@@ -88,7 +94,7 @@ size_t musica_read(FILE *file, Musica musica)
 	// leitura de uma linha por vez ate o final do arquivo
 	retorno_get = getline(&linha, &len, file);
 	if (retorno_get == EOF)
-	{	
+	{
 		free(musica);
 		free(linha);
 		return (retorno_get);
@@ -128,7 +134,7 @@ void musica_tok(Musica musica, char *musica_str)
 			musica->artists = musica_salva_artistas(token, &musica->n_artistas);
 			break;
 		case (ID_ARTISTS):
-			musica->id_artists = musica_salva_artistas(token, &musica->n_artistas);
+			musica->id_artists = musica_salva_artistas(token, &musica->n_id_artistas);
 			break;
 		case (DATA_LANCAMENTO):
 			musica->data_lancamento = musica_salva_string(token);
@@ -195,16 +201,7 @@ void musica_print(Musica musica)
 }
 
 
-void musica_print_artistas(Musica musica)
-{
-	int *indice_artistas = musica_get_indices(musica);
-	printf("ARTISTAS: ");
-	for (int i = 0; i < musica->n_artistas; i++)
-	{
-		printf("[%d] ", indice_artistas[i]);
-	}
-	printf("\n");
-}
+//
 
 // desaloca uma musica
 void musica_destroy(Musica musica)
@@ -213,11 +210,13 @@ void musica_destroy(Musica musica)
 	for (int i = 0; i < musica->n_artistas; i++)
 	{
 		free(musica->artists[i]);
+	}
+	for (int i = 0; i < musica->n_id_artistas; i++)
+	{
 		free(musica->id_artists[i]);
 	}
 	free(musica->artists);
 	free(musica->id_artists);
-	free(musica->idx_artists);
 	free(musica->data_lancamento);
 	free(musica->nome_da_musica);
 	free(musica);
@@ -237,35 +236,24 @@ int musica_salva_inteiro(char *inteiro_str)
 {
 	return atoi(inteiro_str); // converte para inteiro
 }
-char **musica_salva_artistas(char *artistas_str, int *n_artistas)
+char **musica_salva_artistas(char *artistas_str, int *artistas_len)
 {
-	int n_alocados = 1, n_add = 0;
-	char **artistas_lista = (char **)malloc(n_alocados * sizeof(char *));
-	char *token = artistas_str;
-	// recebe uma string de artistas e separa a cada pipeline
-	while (1)
-	{
-		// quebra o artista a cada pipeline
-		token = strsep(&artistas_str, "|");
-
-		if (token != NULL)
-		{ // uma string valida
-			n_add++;
-			if (n_add == n_alocados)
-			{
-				n_alocados *= 2;
-				artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
-			}
-		}
-		else
-		{
-			// se a string acaba, o loop eh encerrado
-			break;
-		}
-		artistas_lista[n_add - 1] = strdup(token); // salva o artista na lista
-	}
-	*n_artistas = n_add;
-	return artistas_lista;
+    int n_alocados = 100, n_add = 0;
+    char **artistas_lista = (char **)malloc(n_alocados* sizeof(char *));
+    char *token = strsep(&artistas_str, "|");
+    // recebe uma string de generos e separa a cada pipeline
+    for (n_add = 0; token != NULL; n_add++)
+    {
+        if (n_add == n_alocados)
+        {
+            n_alocados *= 2;
+            artistas_lista = realloc(artistas_lista, sizeof(char *) * n_alocados);
+        }
+        artistas_lista[n_add] = strdup(token); // salva o artista na lista
+        token = strsep(&artistas_str, "|");
+    }
+    *artistas_len = n_add;
+    return artistas_lista;
 }
 
 // recupera atributos de musica de orma individual
@@ -284,10 +272,6 @@ int musica_get_duracao(Musica musica)
 int musica_get_explict(Musica musica)
 {
 	return musica->explict;
-}
-int *musica_get_indices(Musica musica)
-{
-	return musica->idx_artists;
 }
 char *musica_get_data_lancamento(Musica musica)
 {
@@ -341,14 +325,12 @@ char **musica_get_lista_artistas(Musica musica)
 {
 	return musica->id_artists;
 }
+char* musica_get_nome_artista(Musica musica, int idx){
+	return musica->artists[idx];
+}
 int musica_get_n_artistas(Musica musica)
 {
 	return musica->n_artistas;
-}
-Musica musica_add_idx_artistas(Musica musica, int *idx_artistas)
-{
-	musica->idx_artists = idx_artistas;
-	return musica;
 }
 
 /*FUNCIONALIDADE BUSCAR MUSICA*/

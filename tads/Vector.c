@@ -44,6 +44,7 @@ VectorType vector_get(Vector v, int idx)
     {
         printf("Indice invalido '%d' para o vetor com tamanho '%d'.\n", idx, v->n_add);
         exit(1);
+
     }
 
     return v->data[idx];
@@ -187,22 +188,22 @@ void vector_print_lista_musicas(int *lista_musicas, int lista_tamanho, Vector ve
     // indice, id, titulo, nome_artistas
     Musica musica_print;
     Artista artista;
-    int *ponteiro_artistas_lista;
     int numero_artistas;
     for (int i = 0; i < lista_tamanho; i++)
     {
         musica_print = vector_get(vetor_musica, lista_musicas[i]);
-        ponteiro_artistas_lista = musica_get_indices(musica_print);
         numero_artistas = musica_get_n_artistas(musica_print);
         printf("[%d] : %s | ID: %s | ARTISTAS:", lista_musicas[i], musica_get_nome(musica_print), musica_get_id(musica_print));
         for (int j = 0; j < numero_artistas; j++)
         {
-            artista = vector_get(vetor_artista, ponteiro_artistas_lista[j]); // eh so imprimir o artista contido em musica;
-            printf(" [%s]", artista_get_nome(artista));
+             // eh so imprimir o artista contido em musica;
+            printf(" [%s]", musica_get_nome_artista(musica_print, j));
         }
         printf("\n");
+
     }
     free(lista_musicas);
+
 }
 /*FUNCIONALIDADE DE LISTAR UMA MUSICA*/
 void vector_listar_musica(int idx_m, Vector vetor_musica, Vector vetor_artista)
@@ -210,7 +211,7 @@ void vector_listar_musica(int idx_m, Vector vetor_musica, Vector vetor_artista)
     Musica musica = vector_get(vetor_musica, idx_m);
     Artista artista;
     musica_print(musica);
-    int *ponteiro_artistas_lista = musica_get_indices(musica);
+    int *ponteiro_artistas_lista = vector_cria_lista_artistas(musica,vetor_artista);
     int numero_artistas = musica_get_n_artistas(musica);
     for (int i = 0; i < numero_artistas; i++)
     {
@@ -219,7 +220,7 @@ void vector_listar_musica(int idx_m, Vector vetor_musica, Vector vetor_artista)
         artista_print(artista);
     }
     printf("\n");
-
+    free(ponteiro_artistas_lista);
     musica_abrir_spotify(musica);
 }
 
