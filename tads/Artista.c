@@ -23,15 +23,15 @@ FILE *artista_abre_arquivo(int argc, char **argv)
 {
     char dir[100] = "data/artists_full.csv";
     // verifica se o diretorio foi informado como argumento
-    // if (argc > 1)
-    // {
-    // 	sprintf(dir, "%s", argv[1]);
-    // }
-    // else
-    // {
-    // 	printf("Diretorio nao informado!\n");
-    // 	exit(EXIT_FAILURE);
-    // }
+    if (argc > 2)
+    {
+    	sprintf(dir, "%s", argv[1]);
+    }
+    else
+    {
+    	printf("Diretorio nao informado!\n");
+    	exit(EXIT_FAILURE);
+    }
     // verifica se o arquivo aberto eh valido
     FILE *file = fopen(dir, "r");
 
@@ -97,29 +97,13 @@ void artista_tok(Artista artista, char *artista_str)
 // imprimir uma artista
 void artista_print(Artista artista)
 {
-    artista_print_nome(artista);
-    artista_print_id(artista);
-    artista_print_seguidores(artista);
-    artista_print_generos(artista);
-    artista_print_popularidade(artista);
-}
-// funcoes auxiliares de impressao individual
-void artista_print_id(Artista artista)
-{
-    printf("ID: %s\n", artista_get_id(artista));
-}
-void artista_print_seguidores(Artista artista)
-{
-    printf("SEGUIDORES: %.2f\n", artista_get_seguidores(artista));
-}
-void artista_print_nome(Artista artista)
-{
     printf("NOME_DO_ARTISTA: %s\n", artista_get_nome(artista));
-}
-void artista_print_popularidade(Artista artista)
-{
+    printf("ID: %s\n", artista_get_id(artista));
+    printf("SEGUIDORES: %.2f\n", artista_get_seguidores(artista));
     printf("POPULARIDADE: %d\n", artista_get_popularidade(artista));
+		artista_print_generos(artista);
 }
+// imprime generos de um artista
 void artista_print_generos(Artista artista)
 {
     char **generos = artista_get_generos(artista);
@@ -152,7 +136,7 @@ int artista_salva_inteiro(char *inteiro_str)
 char **artista_salva_generos(char *generos_str, int *generos_len)
 {
 
-    int n_alocados = 1, n_add = 0;
+    int n_alocados = ALOCAR, n_add = 0;
     char **generos_lista = (char **)malloc(n_alocados * sizeof(char *));
     char *token = strsep(&generos_str, "|");
     // recebe uma string de generos e separa a cada pipeline
@@ -206,4 +190,16 @@ void artista_destroy(Artista artista)
     free(artista->generos);
     free(artista->nome_do_artista);
     free(artista);
+}
+
+int artista_compara(char *str_artista,Artista artista){
+    char *retorno;
+		retorno = strstr(artista_get_nome(artista),str_artista);
+		if(retorno != NULL){
+			return 1;
+			//caso igual
+		}else{
+			return 0;
+			//caso não igual
+		}
 }

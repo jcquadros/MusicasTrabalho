@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #define QTD_ATRIBUTOS_ARTISTA 5
+#define ALOCAR 100
 
 typedef struct artista *Artista;
 
@@ -24,11 +25,7 @@ void artista_tok(Artista artista, char *artista_str);
 
 // imprimir um artista
 void artista_print(Artista artista);
-// imprime cada atributo do artista de forma individual
-void artista_print_id(Artista artista);
-void artista_print_seguidores(Artista artista);
-void artista_print_nome(Artista artista);
-void artista_print_popularidade(Artista artista);
+// imprime  generos de um artista
 void artista_print_generos(Artista artista);
 
 // desaloca artista
@@ -47,5 +44,7 @@ char **artista_get_generos(Artista artista);
 int artista_get_n_generos(Artista artista);
 char *artista_get_nome(Artista artista);
 int artista_get_popularidade(Artista artista);
+
+int artista_compara(char *str_musica,Artista artista);
 
 #endif
